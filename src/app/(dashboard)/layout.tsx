@@ -50,4 +50,4 @@ export default function DashboardLayout({ children }: LayoutProps) {
       <MobileBottomNav />
     </div>
   );
-}
+}
