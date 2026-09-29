@@ -14,6 +14,8 @@ export interface RealCustomerProfile {
   status: string;
   member: "silver" | "gold" | "platinum" | string;
   points: number;
+  phone: string;
+  bio: string;
   memberSince: string;
 }
 
@@ -28,7 +30,9 @@ const DEFAULT_PROFILE: RealCustomerProfile = {
   status: "active",
   member: "silver",
   points: 0,
-  memberSince: "Recent",
+  phone: "",
+  bio: "",
+  memberSince: "Recently",
 };
 
 async function getProfileData(): Promise<RealCustomerProfile> {
@@ -52,7 +56,7 @@ async function getProfileData(): Promise<RealCustomerProfile> {
     const createdAtDate = merged.createdAt ? new Date(merged.createdAt) : new Date();
     const formattedDate = !isNaN(createdAtDate.getTime())
       ? createdAtDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })
-      : "January 2024";
+      : "Recently";
 
     return {
       id: merged._id || merged.id || sessionUser.id || "",
@@ -61,6 +65,7 @@ async function getProfileData(): Promise<RealCustomerProfile> {
       emailVerified: Boolean(merged.emailVerified),
       image:
         merged.image ||
+        merged.avatar ||
         sessionUser.image ||
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80",
       role: merged.role || (sessionUser as any)?.role || "customer",
@@ -68,6 +73,8 @@ async function getProfileData(): Promise<RealCustomerProfile> {
       status: merged.status || (sessionUser as any)?.status || "active",
       member: merged.member || (sessionUser as any)?.member || "silver",
       points: typeof merged.points === "number" ? merged.points : (sessionUser as any)?.points || 0,
+      phone: merged.phone || (sessionUser as any)?.phone || "",
+      bio: merged.bio || (sessionUser as any)?.bio || "",
       memberSince: formattedDate,
     };
   } catch (error) {

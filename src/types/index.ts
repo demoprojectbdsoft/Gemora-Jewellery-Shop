@@ -81,6 +81,11 @@ export interface User {
   status?: string | null;
   member?: "silver" | "gold" | "platinum" | string | null;
   points?: number | null;
+  phone?: string | null;
+  bio?: string | null;
+  department?: string | null;
+  createdAt?: string | Date | null;
+  updatedAt?: string | Date | null;
 }
 
 // ─── Products & Reviews ───────────────────────────────────────────────────────

@@ -41,19 +41,8 @@ interface AdminProfileClientProps {
 export default function AdminProfileClient({
   initialProfile,
 }: AdminProfileClientProps) {
-  const { data: session } = authClient.useSession();
-  const sessionUser = session?.user;
-
-  const [profile, setProfile] = useState<AdminProfileData>({
-    ...initialProfile,
-    name: sessionUser?.name || initialProfile.name,
-    email: sessionUser?.email || initialProfile.email,
-    avatar: sessionUser?.image || initialProfile.avatar,
-  });
-
-  const [avatarUrl, setAvatarUrl] = useState<string>(
-    sessionUser?.image || initialProfile.avatar || ""
-  );
+  const [profile, setProfile] = useState<AdminProfileData>(initialProfile);
+  const [avatarUrl, setAvatarUrl] = useState<string>(initialProfile.avatar || "");
   const [isSaving, setIsSaving] = useState(false);
 
   const handleProfileSave = async (e: React.FormEvent) => {

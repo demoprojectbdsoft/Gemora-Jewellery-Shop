@@ -12,6 +12,8 @@ import {
   Save,
   Coins,
   Crown,
+  Phone,
+  FileText,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
@@ -26,23 +28,12 @@ interface CustomerProfileClientProps {
 export default function CustomerProfileClient({
   initialProfile,
 }: CustomerProfileClientProps) {
-  const { data: session } = authClient.useSession();
-  const sessionUser = session?.user as any;
+  const [profile, setProfile] = useState<RealCustomerProfile>(initialProfile);
 
-  const [profile, setProfile] = useState<RealCustomerProfile>({
-    ...initialProfile,
-    name: sessionUser?.name || initialProfile.name,
-    email: sessionUser?.email || initialProfile.email,
-    image: sessionUser?.image || initialProfile.image,
-    role: sessionUser?.role || initialProfile.role,
-    plan: sessionUser?.plan || initialProfile.plan,
-    status: sessionUser?.status || initialProfile.status,
-    member: sessionUser?.member || initialProfile.member,
-    points: sessionUser?.points !== undefined ? sessionUser.points : initialProfile.points,
-  });
-
-  const [name, setName] = useState(profile.name);
-  const [imageUrl, setImageUrl] = useState(profile.image);
+  const [name, setName] = useState(initialProfile.name || "");
+  const [imageUrl, setImageUrl] = useState(initialProfile.image || "");
+  const [phone, setPhone] = useState(initialProfile.phone || "");
+  const [bio, setBio] = useState(initialProfile.bio || "");
   const [isSaving, setIsSaving] = useState(false);
 
   const memberTierName =
@@ -86,12 +77,16 @@ export default function CustomerProfileClient({
         await updateUser(profile.id, {
           name: name.trim(),
           image: imageUrl.trim() || undefined,
+          phone: phone.trim(),
+          bio: bio.trim(),
         });
       }
       setProfile((prev) => ({
         ...prev,
         name: name.trim(),
         image: imageUrl.trim() || prev.image,
+        phone: phone.trim(),
+        bio: bio.trim(),
       }));
       toast.success("Profile updated successfully!");
     } catch {
@@ -119,7 +114,7 @@ export default function CustomerProfileClient({
           </span>
         </h1>
         <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">
-          View your membership status, reward points, and account information.
+          View and manage your personal details, bio, contact number, and membership perks.
         </p>
       </div>
 
@@ -160,11 +155,23 @@ export default function CustomerProfileClient({
               </span>
             </div>
 
+            {profile.bio && (
+              <p className="text-xs text-gray-500 dark:text-gray-400 max-w-lg">
+                {profile.bio}
+              </p>
+            )}
+
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 pt-1 text-xs text-gray-500 dark:text-gray-400">
               <span className="flex items-center gap-1">
                 <Mail className="w-3.5 h-3.5 text-gray-400" />
                 {profile.email}
               </span>
+              {profile.phone && (
+                <span className="flex items-center gap-1">
+                  <Phone className="w-3.5 h-3.5 text-gray-400" />
+                  {profile.phone}
+                </span>
+              )}
               <span className="flex items-center gap-1">
                 <Coins className="w-3.5 h-3.5 text-amber-500" />
                 <span className="font-semibold text-gray-900 dark:text-white">
@@ -190,7 +197,7 @@ export default function CustomerProfileClient({
               Personal Information
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Update your display name and profile image avatar.
+              Update your display name, contact phone, avatar, and personal bio.
             </p>
           </div>
 
@@ -205,17 +212,32 @@ export default function CustomerProfileClient({
               />
             </div>
 
-            <div className="space-y-1">
-              <label className="font-semibold text-gray-700 dark:text-gray-300">
-                Full Name
-              </label>
-              <Input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your full name"
-                className="w-full h-10 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-950 focus:border-sky-500 text-xs"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="font-semibold text-gray-700 dark:text-gray-300">
+                  Full Name
+                </label>
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your full name"
+                  className="w-full h-10 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-950 focus:border-sky-500 text-xs"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-gray-700 dark:text-gray-300">
+                  Phone Number
+                </label>
+                <Input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+1 (555) 000-0000"
+                  className="w-full h-10 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-950 focus:border-sky-500 text-xs"
+                />
+              </div>
             </div>
 
             <div className="space-y-1">
@@ -231,6 +253,19 @@ export default function CustomerProfileClient({
               <p className="text-[10px] text-gray-400 dark:text-gray-500">
                 Email address is linked to your authentication login.
               </p>
+            </div>
+
+            <div className="space-y-1">
+              <label className="font-semibold text-gray-700 dark:text-gray-300">
+                Personal Bio / About Me
+              </label>
+              <textarea
+                rows={3}
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Tell us a little bit about yourself..."
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-950 focus:border-sky-500 focus:outline-none text-xs"
+              />
             </div>
 
             <div className="pt-2 flex justify-end">

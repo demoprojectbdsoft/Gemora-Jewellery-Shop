@@ -1,6 +1,7 @@
 import React from "react";
 import AdminProfileClient, { AdminProfileData } from "./AdminProfileClient";
 import { getUserSession } from "@/lib/core/session";
+import { getUserById } from "@/lib/api/user";
 
 const INITIAL_ADMIN_PROFILE: AdminProfileData = {
   id: "admin-user",
@@ -8,34 +9,66 @@ const INITIAL_ADMIN_PROFILE: AdminProfileData = {
   firstName: "System",
   lastName: "Administrator",
   email: "admin@electro.com",
-  phone: "+1 (555) 019-2834",
+  phone: "",
   avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80",
   role: "Administrator",
   department: "Management & Operations",
-  bio: "Senior Store Administrator overseeing product catalog, user management, and order fulfillment.",
-  joinedDate: "January 2024",
+  bio: "",
+  joinedDate: "Recently",
 };
 
 async function getAdminProfileData(): Promise<AdminProfileData> {
   try {
     const session = await getUserSession();
-    if (session) {
-      const nameParts = (session.name || "Administrator").split(" ");
-      const firstName = nameParts[0] || "System";
-      const lastName = nameParts.slice(1).join(" ") || "Admin";
+    if (!session) return INITIAL_ADMIN_PROFILE;
 
-      return {
-        ...INITIAL_ADMIN_PROFILE,
-        id: session.id || INITIAL_ADMIN_PROFILE.id,
-        name: session.name || INITIAL_ADMIN_PROFILE.name,
-        firstName,
-        lastName,
-        email: session.email || INITIAL_ADMIN_PROFILE.email,
-        avatar: session.image || INITIAL_ADMIN_PROFILE.avatar,
-        role: (session as { role?: string })?.role || "admin",
-      };
+    let dbUser: any = null;
+    if (session.id) {
+      try {
+        const res = await getUserById(session.id);
+        if (res?.data) {
+          dbUser = res.data;
+        }
+      } catch {
+        // Fallback to session
+      }
     }
-    return INITIAL_ADMIN_PROFILE;
+
+    const merged = dbUser || session;
+    const name = merged.name || session.name || "Administrator";
+    const nameParts = name.trim().split(/\s+/);
+    const firstName = nameParts[0] || "System";
+    const lastName = nameParts.slice(1).join(" ") || "";
+
+    const rawDate = merged.createdAt || (session as any).createdAt;
+    let joinedDate = "Recently";
+    if (rawDate) {
+      const parsedDate = new Date(rawDate);
+      if (!isNaN(parsedDate.getTime())) {
+        joinedDate = parsedDate.toLocaleDateString("en-US", {
+          month: "long",
+          year: "numeric",
+        });
+      }
+    }
+
+    return {
+      id: merged._id || merged.id || session.id || INITIAL_ADMIN_PROFILE.id,
+      name,
+      firstName,
+      lastName,
+      email: merged.email || session.email || INITIAL_ADMIN_PROFILE.email,
+      phone: merged.phone || (session as any).phone || "",
+      avatar:
+        merged.image ||
+        merged.avatar ||
+        session.image ||
+        INITIAL_ADMIN_PROFILE.avatar,
+      role: merged.role || (session as any).role || "admin",
+      department: merged.department || (session as any).department || "Management & Operations",
+      bio: merged.bio || (session as any).bio || "",
+      joinedDate,
+    };
   } catch (error) {
     console.error("Failed to fetch admin profile:", error);
     return INITIAL_ADMIN_PROFILE;
