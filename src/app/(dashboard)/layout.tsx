@@ -6,6 +6,8 @@ import { LayoutProps } from "@/types";
 import DashboardNavbar from "@/components/dashboard/DashboardNavbar";
 import AdminSidebar from "@/components/dashboard/AdminSidebar";
 import CustomerSidebar from "@/components/dashboard/CustomerSidebar";
+import BottomNavbar from "@/components/shared/BottomNavbar";
+import MobileBottomNav from "@/components/shared/MobileBottomNav";
 
 export default function DashboardLayout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,11 +37,17 @@ export default function DashboardLayout({ children }: LayoutProps) {
           onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
         />
 
+        {/* Shared Nav Row (Home, Shop, Profile, Settings, Dashboard) */}
+        <BottomNavbar />
+
         {/* Render Page Children */}
         <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
           {children}
         </main>
       </div>
+
+      {/* Fixed Mobile Bottom Bar */}
+      <MobileBottomNav />
     </div>
   );
 }
