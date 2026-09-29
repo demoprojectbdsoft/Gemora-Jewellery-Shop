@@ -6,19 +6,19 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   ShoppingBag,
-  UserCircle,
-  Settings,
-  LayoutDashboard,
+  Info,
+  Briefcase,
+  Mail,
   Truck,
 } from "lucide-react";
 
-// Pages shown in desktop bottom nav & mobile bottom fixed bar
+// Pages shown in desktop bottom nav
 export const NAV_LINKS = [
-  { label: "Home",      href: "/",         icon: Home },
-  { label: "Shop",      href: "/shop",     icon: ShoppingBag },
-  { label: "Profile",   href: "/profile",  icon: UserCircle },
-  { label: "Settings",  href: "/settings", icon: Settings },
-  { label: "Dashboard", href: "/dashboard",icon: LayoutDashboard },
+  { label: "Home",     href: "/",         icon: Home },
+  { label: "Shop",     href: "/shop",     icon: ShoppingBag },
+  { label: "About",    href: "/about",    icon: Info },
+  { label: "Services", href: "/services", icon: Briefcase },
+  { label: "Contact",  href: "/contact",  icon: Mail },
 ];
 
 // Pages shown in drawer / hamburger menu only
