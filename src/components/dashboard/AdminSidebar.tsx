@@ -19,6 +19,7 @@ import {
   X,
   ArrowLeft,
   LogOut,
+  Star,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
@@ -26,13 +27,14 @@ import { toast } from "react-toastify";
 const NAV_ITEMS = [
   { name: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
   { name: "Products", href: "/dashboard/admin/products", icon: Package },
-  { name: "Add Product", href: "/dashboard/admin/products/add", icon: PackagePlus },
+  // { name: "Add Product", href: "/dashboard/admin/products/add", icon: PackagePlus },
   { name: "Categories", href: "/dashboard/admin/categories", icon: FolderTree },
-  { name: "Add Category", href: "/dashboard/admin/categories/add", icon: FolderPlus },
+  // { name: "Add Category", href: "/dashboard/admin/categories/add", icon: FolderPlus },
   { name: "Home Slider", href: "/dashboard/admin/home-slider", icon: SlidersHorizontal },
   { name: "Orders", href: "/dashboard/admin/orders", icon: ShoppingBag },
   { name: "Transactions", href: "/dashboard/admin/transactions", icon: CreditCard },
-  { name: "Customers", href: "/dashboard/admin/customers", icon: Users },
+  { name: "Users", href: "/dashboard/admin/users", icon: Users },
+  { name: "Reviews", href: "/dashboard/admin/reviews", icon: Star },
   // { name: "Reports", href: "/dashboard/admin/reports", icon: FileText },
 ];
 

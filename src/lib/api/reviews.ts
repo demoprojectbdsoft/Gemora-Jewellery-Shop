@@ -7,3 +7,7 @@ export const getReviewsByProductId = async(productId : string) =>{
 export const getReviewsByUserId = async(userId : string) =>{
     return serverFetch(`/reviews?userId=${userId}`);
 }
+
+export const getAllReviews = async (query?: string) => {
+  return serverFetch(`/reviews${query ? `?${query}` : ""}`, true);
+};
