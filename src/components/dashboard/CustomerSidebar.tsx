@@ -15,6 +15,7 @@ import {
   Sparkles,
   ShieldCheck,
   LogOut,
+  Star,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
@@ -23,6 +24,7 @@ const CUSTOMER_NAV_ITEMS = [
   { name: "Overview", href: "/dashboard/customer", icon: LayoutDashboard },
   { name: "Wishlist", href: "/dashboard/customer/wishlist", icon: Heart },
   { name: "My Orders", href: "/dashboard/customer/orders", icon: ShoppingBag },
+  { name: "My Reviews", href: "/dashboard/customer/reviews", icon: Star },
   { name: "Transactions", href: "/dashboard/customer/transactions", icon: CreditCard },
 ];
 

@@ -20,11 +20,16 @@ export default async function AdminUsersPage({ searchParams }: AdminUsersPagePro
   const page = Number(params?.page) || 1;
   const limit = Number(params?.limit) || 10;
 
-  const usersRes = await getUsers({
-    ...params,
-    page,
-    limit,
-  });
+  // Build query string here in page.tsx to keep helper functions simple
+  const query = new URLSearchParams();
+  if (params?.search) query.set("search", params.search);
+  if (params?.role && params.role !== "ALL" && params.role !== "All") query.set("role", params.role);
+  if (params?.status && params.status !== "ALL" && params.status !== "All") query.set("status", params.status);
+  if (params?.sort) query.set("sort", params.sort);
+  query.set("page", String(page));
+  query.set("limit", String(limit));
+
+  const usersRes = await getUsers(query.toString());
 
   const users = Array.isArray(usersRes?.data?.users)
     ? usersRes.data.users

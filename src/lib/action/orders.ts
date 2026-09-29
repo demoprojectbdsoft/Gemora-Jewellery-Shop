@@ -1,6 +1,6 @@
 "use server";
 
-import { serverMutation } from "../core/server";
+import { serverMutation, serverFetch } from "../core/server";
 import { getUserSession } from "../core/session";
 import { CreateOrderPayload } from "@/types";
 
@@ -14,3 +14,8 @@ export const updateOrderStatus = async (id: string, orderStatus: string) => {
   return serverMutation(`/orders/${id}/status`, { orderStatus }, "PATCH");
 };
 
+export const getUserOrdersAction = async (userId: string) => {
+  if (!userId) return [];
+  const res = await serverFetch(`/orders?userId=${userId}`, true);
+  return res?.data?.orders || res?.data || (Array.isArray(res) ? res : []);
+};
