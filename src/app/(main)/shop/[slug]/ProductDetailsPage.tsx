@@ -44,12 +44,16 @@ export default function ProductDetailsPage({
   product,
   initialReviews = [],
   currentUser = null,
+  hasOrdered = false,
   hasPurchased = false,
+  hasAlreadyReviewed = false,
 }: {
   product?: Product | null;
   initialReviews?: ProductReview[];
   currentUser?: User | null;
+  hasOrdered?: boolean;
   hasPurchased?: boolean;
+  hasAlreadyReviewed?: boolean;
 }) {
   // ⚠️ All hooks must be called unconditionally before any early returns
   const router = useRouter();
@@ -337,13 +341,25 @@ export default function ProductDetailsPage({
     }
 
     // Only customer who bought the product can submit review
-    if (!hasPurchased) {
+    if (!hasOrdered) {
       toast.error("You can only review products you have purchased.");
+      return;
+    }
+
+    // Order must be delivered
+    if (!hasPurchased) {
+      toast.error("Your order must be delivered before you can leave a review.");
       return;
     }
 
     if (!description.trim()) {
       toast.warning("Please enter a review description.");
+      return;
+    }
+
+    // Prevent duplicate reviews
+    if (hasAlreadyReviewed) {
+      toast.error("You have already reviewed this product.");
       return;
     }
 
@@ -881,18 +897,48 @@ export default function ProductDetailsPage({
                           Sign In
                         </Link>
                       </div>
-                    ) : !hasPurchased ? (
-                      /* Only buyers can submit review */
-                      <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 text-center space-y-2">
-                        <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    ) : !hasOrdered ? (
+                      /* User has never ordered this product */
+                      <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-rose-50/60 dark:bg-rose-950/20 border border-rose-200/70 dark:border-rose-900/40 text-center space-y-2">
+                        <div className="w-9 h-9 rounded-xl bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 flex items-center justify-center">
                           <ShieldAlert className="w-5 h-5" />
                         </div>
                         <div className="space-y-1">
                           <p className="text-sm font-bold text-slate-900 dark:text-white">
-                            Verified Purchase Required
+                            Purchase Required
                           </p>
                           <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-                            Only customers who bought this product can leave a review.
+                            Only customers who have purchased this product can leave a review.
+                          </p>
+                        </div>
+                      </div>
+                    ) : !hasPurchased ? (
+                      /* User ordered but order is not delivered yet */
+                      <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/40 text-center space-y-2">
+                        <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                          <Truck className="w-5 h-5" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-bold text-slate-900 dark:text-white">
+                            Awaiting Delivery
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
+                            Your order must be delivered before you can leave a review.
+                          </p>
+                        </div>
+                      </div>
+                    ) : hasAlreadyReviewed ? (
+                      /* User already submitted a review for this product */
+                      <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/70 dark:border-emerald-900/40 text-center space-y-2">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                          <CheckCircle2 className="w-5 h-5" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-bold text-slate-900 dark:text-white">
+                            Review Already Submitted
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
+                            You have already submitted a review for this product. One review per product is allowed.
                           </p>
                         </div>
                       </div>

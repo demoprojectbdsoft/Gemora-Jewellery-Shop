@@ -72,20 +72,40 @@ const SAMPLE_REVIEWS: ProductReview[] = [
 ];
 
 import { getOrdersByUserId } from "@/lib/api/orders";
+import { getReviewsByProductId } from "@/lib/api/reviews";
 
 export default async function ProductDetailsRoutePage() {
   const currentUser = await getUserSession();
 
-  // Check if current user bought this product from their orders
+  // Check if current user ordered / has delivered order for this product
+  let hasOrdered = false;
   let hasPurchased = false;
+  let hasAlreadyReviewed = false;
+
   if (currentUser?.id) {
     const ordersRes = await getOrdersByUserId(currentUser.id);
     const orders = ordersRes?.data?.orders || ordersRes?.data || [];
-    hasPurchased = orders.some((order: any) =>
+
+    // Check if user ordered this product at all
+    const matchingOrders = orders.filter((order: any) =>
       order.items?.some(
         (item: any) =>
           String(item.productId?._id || item.productId?.id || item.productId) === String(SAMPLE_PRODUCT.id)
       )
+    );
+    hasOrdered = matchingOrders.length > 0;
+
+    // Check if any of those orders are delivered
+    hasPurchased = matchingOrders.some(
+      (order: any) => String(order.orderStatus).toLowerCase() === "delivered"
+    );
+
+    // Check if this user already left a review on this product
+    const reviewsRes = await getReviewsByProductId(SAMPLE_PRODUCT.id);
+    const allReviews = reviewsRes?.data?.reviews ?? reviewsRes?.data ?? [];
+    hasAlreadyReviewed = Array.isArray(allReviews) && allReviews.some(
+      (r: any) =>
+        String(r.userId?._id || r.userId?.id || r.userId) === String(currentUser.id)
     );
   }
 
@@ -94,7 +114,9 @@ export default async function ProductDetailsRoutePage() {
       product={SAMPLE_PRODUCT}
       initialReviews={SAMPLE_REVIEWS}
       currentUser={currentUser}
+      hasOrdered={hasOrdered}
       hasPurchased={hasPurchased}
+      hasAlreadyReviewed={hasAlreadyReviewed}
     />
   );
 }
