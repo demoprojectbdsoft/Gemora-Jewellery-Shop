@@ -3,11 +3,35 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV_LINKS } from "./BottomNavbar";
+import { Home, ShoppingBag, UserCircle, Settings, LayoutDashboard } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const userRole = ((user as { role?: string })?.role || "customer").toLowerCase();
+
+  // Auth-aware hrefs
+  const profileHref = user
+    ? `/dashboard/${userRole}/profile`
+    : "/auth/login";
+  const settingsHref = user
+    ? `/dashboard/${userRole}/settings`
+    : "/auth/login";
+  const dashboardHref = user
+    ? `/dashboard/${userRole}`
+    : "/auth/login";
+
+  const NAV_ITEMS = [
+    { label: "Home", href: "/", icon: Home },
+    { label: "Shop", href: "/shop", icon: ShoppingBag },
+    { label: "Profile", href: profileHref, icon: UserCircle },
+    { label: "Settings", href: settingsHref, icon: Settings },
+    { label: "Dashboard", href: dashboardHref, icon: LayoutDashboard },
+  ];
 
   return (
     <nav
@@ -15,7 +39,7 @@ export default function MobileBottomNav() {
       className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/90 dark:bg-gray-950/90 backdrop-blur-lg border-t border-gray-200/80 dark:border-gray-800/80 shadow-[0_-4px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_25px_rgba(0,0,0,0.3)] transition-colors duration-200"
     >
       <div className="max-w-md mx-auto px-3 py-1.5 flex items-center justify-around relative">
-        {NAV_LINKS.map((item, idx) => {
+        {NAV_ITEMS.map((item, idx) => {
           const Icon = item.icon;
           const isActive =
             item.href === "/"
@@ -25,7 +49,7 @@ export default function MobileBottomNav() {
 
           return (
             <div
-              key={item.href}
+              key={item.label}
               className="relative flex flex-col items-center justify-center flex-1"
               onMouseEnter={() => setHoveredIndex(idx)}
               onMouseLeave={() => setHoveredIndex(null)}

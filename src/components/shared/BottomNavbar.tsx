@@ -6,18 +6,26 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   ShoppingBag,
-  Info,
-  Briefcase,
-  Mail,
+  UserCircle,
+  Settings,
+  LayoutDashboard,
   Truck,
 } from "lucide-react";
 
+// Pages shown in desktop bottom nav & mobile bottom fixed bar
 export const NAV_LINKS = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "Shop", href: "/shop", icon: ShoppingBag },
-  { label: "About Us", href: "/about", icon: Info },
-  { label: "Services", href: "/services", icon: Briefcase },
-  { label: "Contact Us", href: "/contact", icon: Mail },
+  { label: "Home",      href: "/",         icon: Home },
+  { label: "Shop",      href: "/shop",     icon: ShoppingBag },
+  { label: "Profile",   href: "/profile",  icon: UserCircle },
+  { label: "Settings",  href: "/settings", icon: Settings },
+  { label: "Dashboard", href: "/dashboard",icon: LayoutDashboard },
+];
+
+// Pages shown in drawer / hamburger menu only
+export const DRAWER_PAGE_LINKS = [
+  { label: "About Us", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 export default function BottomNavbar() {

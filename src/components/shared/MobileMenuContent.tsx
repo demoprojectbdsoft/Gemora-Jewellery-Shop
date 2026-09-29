@@ -9,12 +9,21 @@ import {
   LogOut,
   Loader2,
   LayoutDashboard,
+  Info,
+  Briefcase,
+  Mail,
 } from "lucide-react";
 import { Category, SubCategory } from "@/types";
 import MobileCategories from "./MobileCategories";
 import { ThemeSwitch } from "./Switcher";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
+
+const PAGE_LINKS = [
+  { label: "About Us", href: "/about", icon: Info, color: "text-sky-500" },
+  { label: "Services", href: "/services", icon: Briefcase, color: "text-violet-500" },
+  { label: "Contact Us", href: "/contact", icon: Mail, color: "text-emerald-500" },
+];
 
 interface MobileMenuContentProps {
   categories: Category[];
@@ -153,7 +162,32 @@ export default function MobileMenuContent({
           <ThemeSwitch variant="inline" />
         </div>
 
-        {/* 3. Categories and Subcategories Tree */}
+        {/* 3. Explore Pages (About, Services, Contact) */}
+        <div className="space-y-1">
+          <p className="px-1 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1.5">
+            Explore
+          </p>
+          {PAGE_LINKS.map((page) => {
+            const Icon = page.icon;
+            return (
+              <Link
+                key={page.href}
+                href={page.href}
+                onClick={onClose}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-900/70 border border-gray-200/80 dark:border-gray-800/80 hover:border-primary/40 dark:hover:border-primary/40 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group"
+              >
+                <div className={`w-7 h-7 rounded-lg flex items-center justify-center bg-white dark:bg-gray-800 shadow-xs border border-gray-100 dark:border-gray-700 shrink-0 ${page.color}`}>
+                  <Icon className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 group-hover:text-primary dark:group-hover:text-primary transition-colors">
+                  {page.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* 4. Categories and Subcategories Tree */}
         <div className="pt-2 border-t border-gray-100 dark:border-gray-800/80">
           <MobileCategories
             categories={categories}
