@@ -1,9 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Open_Sans, Poppins } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { ToastContainer } from "react-toastify";
-
 
 // 1. Initialize Primary Font (Open Sans)
 const openSans = Open_Sans({
@@ -19,12 +18,37 @@ const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-export const metadata = {
+// Viewport configuration for standalone PWA & responsive displays
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#0284c7" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0f19" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+};
+
+export const metadata: Metadata = {
+  title: {
+    default: "Electro - Premium Electronics Store",
+    template: "%s | Electro",
+  },
+  description: "Worldwide Electronics Store with best deals, fast shipping, and top-tier tech products.",
   manifest: "/manifest.webmanifest",
+  applicationName: "Electro",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "Electro",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
   },
 };
 
