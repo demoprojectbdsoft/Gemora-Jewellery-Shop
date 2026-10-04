@@ -1,270 +1,300 @@
 import React from "react";
-import CustomerOverviewClient, {
-  CustomerStatCard,
-  CustomerSpendingVsSavings,
-  CustomerOrderStatusItem,
-} from "./CustomerOverviewClient";
+import CustomerOverviewClient from "./CustomerOverviewClient";
 import { getUserSession } from "@/lib/core/session";
+import { getOrdersByUserId } from "@/lib/api/orders";
 import { getWishlistByUserId } from "@/lib/api/wishlist";
+import { getTransactionsByUserId } from "@/lib/api/transactions";
+import { aggregateCustomerDashboard } from "@/lib/dashboard-helpers";
 import {
-  SpendingDataPoint,
-  CategoryPurchaseData,
   CustomerOrder,
+  CustomerOrderItem,
   CustomerWishlistItem,
   CustomerTransaction,
 } from "@/types/customerDashboard";
 
-const STAT_CARDS_DATA: CustomerStatCard[] = [
-  {
-    title: "Total Orders",
-    value: "14 Orders",
-    change: "+2 active in transit",
-    isPositive: true,
-    iconName: "ShoppingBag",
-  },
-  {
-    title: "Total Spent",
-    value: "$1,842.50",
-    change: "Saved $280.00 with coupons",
-    isPositive: true,
-    iconName: "DollarSign",
-  },
-  {
-    title: "Wishlist Items",
-    value: "6 Items",
-    change: "3 on discount sale",
-    isPositive: true,
-    iconName: "Heart",
-  },
-  {
-    title: "Reward Points",
-    value: "1,450 pts",
-    change: "Gold Tier Member",
-    isPositive: true,
-    iconName: "Sparkles",
-  },
-];
+export const dynamic = "force-dynamic";
 
-const SPENDING_GRAPH_DATA: SpendingDataPoint[] = [
-  { month: "Jan", amount: 140, orders: 1 },
-  { month: "Feb", amount: 260, orders: 2 },
-  { month: "Mar", amount: 190, orders: 2 },
-  { month: "Apr", amount: 320, orders: 3 },
-  { month: "May", amount: 210, orders: 1 },
-  { month: "Jun", amount: 480, orders: 3 },
-  { month: "Jul", amount: 110, orders: 1 },
-  { month: "Aug", amount: 380, orders: 2 },
-];
+function capitalizeFirst(str: string): string {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
-const SPENDING_VS_SAVINGS_DATA: CustomerSpendingVsSavings[] = [
-  { month: "Jan", spending: 140, savings: 25, orders: 1 },
-  { month: "Feb", spending: 260, savings: 45, orders: 2 },
-  { month: "Mar", spending: 190, savings: 30, orders: 2 },
-  { month: "Apr", spending: 320, savings: 60, orders: 3 },
-  { month: "May", spending: 210, savings: 40, orders: 1 },
-  { month: "Jun", spending: 480, savings: 95, orders: 3 },
-  { month: "Jul", spending: 110, savings: 15, orders: 1 },
-  { month: "Aug", spending: 380, savings: 75, orders: 2 },
-];
+function mapOrderStatus(status: string): CustomerOrder["status"] {
+  const s = (status || "").toLowerCase();
+  if (s === "shipped") return "Shipped";
+  if (s === "delivered" || s === "completed") return "Delivered";
+  if (s === "cancelled") return "Cancelled";
+  if (s === "refunded") return "Refunded";
+  return "Processing";
+}
 
-const CATEGORY_GRAPH_DATA: CategoryPurchaseData[] = [
-  { name: "Laptops & Computers", value: 45, amount: 829.12, color: "#0284c7" },
-  { name: "Headphones & Audio", value: 25, amount: 460.62, color: "#2563eb" },
-  { name: "Smartwatches", value: 18, amount: 331.65, color: "#6366f1" },
-  { name: "Accessories", value: 12, amount: 221.10, color: "#38bdf8" },
-];
+function mapPaymentMethod(method: string): string {
+  switch ((method || "").toLowerCase()) {
+    case "bkash":
+      return "bKash";
+    case "nagad":
+      return "Nagad";
+    case "rocket":
+      return "Rocket";
+    case "cod":
+      return "Cash on Delivery";
+    default:
+      return capitalizeFirst(method || "Unknown");
+  }
+}
 
-const ORDER_STATUS_DISTRIBUTION: CustomerOrderStatusItem[] = [
-  { name: "Delivered", value: 11, color: "#0284c7" },
-  { name: "Shipped / In Transit", value: 2, color: "#2563eb" },
-  { name: "Processing", value: 1, color: "#6366f1" },
-];
+function formatTimelineDate(dateValue?: string | Date): string {
+  if (!dateValue) return "";
+  const d = new Date(dateValue);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
-// Overview recent orders snippet (full data lives in orders/page.tsx)
-const RECENT_ORDERS_DATA: CustomerOrder[] = [
-  {
-    id: "ord-1",
-    orderNumber: "#ORD-9582",
-    date: "Aug 18, 2026",
-    status: "Shipped",
-    paymentStatus: "Paid",
-    paymentMethod: "Visa •••• 4242",
-    total: 399.00,
-    itemCount: 2,
-    carrier: "FedEx Express",
-    trackingNumber: "FX-99824128",
-    estimatedDelivery: "Aug 21, 2026",
-    shippingAddress: "742 Evergreen Terrace, Springfield, OR 97477",
-    items: [
+function buildTimeline(
+  status: string,
+  createdAt?: string,
+  updatedAt?: string
+): CustomerOrder["timeline"] {
+  const createdTime = formatTimelineDate(createdAt);
+  const updatedTime = formatTimelineDate(updatedAt) || createdTime;
+  const s = (status || "").toLowerCase();
+
+  if (s === "cancelled") {
+    return [
       {
-        id: "item-1",
-        name: "Noise Cancelling Wireless Headphones Pro",
-        slug: "noise-cancelling-wireless-headphones-pro",
-        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&auto=format&fit=crop&q=80",
-        price: 299.00,
-        quantity: 1,
+        title: "Order Placed",
+        date: createdTime,
+        completed: true,
+        description: "Your order was received and confirmed.",
       },
       {
-        id: "item-2",
-        name: "Fast Charge USB-C Braided Cable 2M",
-        slug: "fast-charge-usbc-cable",
-        image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=200&auto=format&fit=crop&q=80",
-        price: 100.00,
-        quantity: 1,
+        title: "Order Cancelled",
+        date: updatedTime,
+        completed: true,
+        current: true,
+        description: "This order was cancelled.",
       },
-    ],
-    timeline: [
-      { title: "Order Placed", date: "Aug 18, 10:30 AM", completed: true, description: "Your order was received and confirmed." },
-      { title: "Payment Processed", date: "Aug 18, 10:32 AM", completed: true, description: "Payment of $399.00 was authorized via Visa." },
-      { title: "Dispatched from Warehouse", date: "Aug 19, 02:15 PM", completed: true, description: "Package handed over to FedEx carrier hub." },
-      { title: "In Transit", date: "Aug 20, 08:45 AM", completed: false, current: true, description: "Package is on the way to local sorting facility." },
-      { title: "Out for Delivery", date: "Expected Aug 21", completed: false, description: "Courier will deliver to your doorstep." },
-    ],
-  },
-  {
-    id: "ord-2",
-    orderNumber: "#ORD-9564",
-    date: "Aug 02, 2026",
-    status: "Delivered",
-    paymentStatus: "Paid",
-    paymentMethod: "Apple Pay",
-    total: 129.99,
-    itemCount: 1,
-    carrier: "DHL Express",
-    trackingNumber: "DHL-84729104",
-    estimatedDelivery: "Aug 05, 2026",
-    shippingAddress: "742 Evergreen Terrace, Springfield, OR 97477",
-    items: [
-      {
-        id: "item-3",
-        name: "Ultra Ergonomic Mechanical Gaming Keyboard RGB",
-        slug: "ultra-ergonomic-mechanical-keyboard",
-        image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200&auto=format&fit=crop&q=80",
-        price: 129.99,
-        quantity: 1,
-      },
-    ],
-    timeline: [
-      { title: "Order Placed", date: "Aug 02, 09:12 AM", completed: true, description: "Order confirmed." },
-      { title: "Dispatched", date: "Aug 03, 11:30 AM", completed: true, description: "Dispatched with DHL Express." },
-      { title: "Delivered", date: "Aug 05, 03:40 PM", completed: true, description: "Delivered and signed at front porch." },
-    ],
-  },
-  {
-    id: "ord-3",
-    orderNumber: "#ORD-9490",
-    date: "Jul 24, 2026",
-    status: "Delivered",
-    paymentStatus: "Paid",
-    paymentMethod: "Mastercard •••• 8812",
-    total: 649.50,
-    itemCount: 1,
-    carrier: "UPS Express",
-    trackingNumber: "UPS-10492817",
-    estimatedDelivery: "Jul 27, 2026",
-    shippingAddress: "742 Evergreen Terrace, Springfield, OR 97477",
-    items: [
-      {
-        id: "item-4",
-        name: '4K Ultra Gaming Monitor 27" 165Hz IPS Panel',
-        slug: "4k-ultra-gaming-monitor-27",
-        image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=200&auto=format&fit=crop&q=80",
-        price: 649.50,
-        quantity: 1,
-      },
-    ],
-    timeline: [
-      { title: "Order Placed", date: "Jul 24", completed: true, description: "Order confirmed." },
-      { title: "Delivered", date: "Jul 27", completed: true, description: "Delivered safely." },
-    ],
-  },
-];
+    ];
+  }
 
-// Overview transactions snippet (full data lives in transactions/page.tsx)
-const RECENT_TRANSACTIONS_DATA: CustomerTransaction[] = [
-  {
-    id: "tx-1",
-    orderId: "ord-1",
-    orderNumber: "#ORD-9582",
-    date: "Aug 18, 2026",
-    amount: 399.00,
-    status: "Completed",
-    paymentMethod: "Visa",
-    cardLast4: "4242",
-    type: "Payment",
-    invoiceNumber: "INV-2026-0881",
-  },
-  {
-    id: "tx-2",
-    orderId: "ord-2",
-    orderNumber: "#ORD-9564",
-    date: "Aug 02, 2026",
-    amount: 129.99,
-    status: "Completed",
-    paymentMethod: "Apple Pay",
-    type: "Payment",
-    invoiceNumber: "INV-2026-0792",
-  },
-  {
-    id: "tx-3",
-    orderId: "ord-3",
-    orderNumber: "#ORD-9490",
-    date: "Jul 24, 2026",
-    amount: 649.50,
-    status: "Completed",
-    paymentMethod: "Mastercard",
-    cardLast4: "8812",
-    type: "Payment",
-    invoiceNumber: "INV-2026-0683",
-  },
-];
+  const isShipped = ["shipped", "delivered", "completed"].includes(s);
+  const isDelivered = s === "delivered" || s === "completed";
+  const isProcessing = ["processing", "confirmed", "shipped", "delivered", "completed"].includes(s);
+
+  return [
+    {
+      title: "Order Placed",
+      date: createdTime,
+      completed: true,
+      description: "Order received and confirmed.",
+    },
+    {
+      title: "Processing",
+      date: isProcessing ? (isShipped ? createdTime : updatedTime) : "",
+      completed: isShipped || isDelivered,
+      current: s === "processing" || s === "confirmed",
+      description: "Order verified, packed, and prepared for dispatch.",
+    },
+    {
+      title: "Shipped",
+      date: isShipped ? updatedTime : "",
+      completed: isDelivered,
+      current: s === "shipped",
+      description: isShipped
+        ? "Package handed over to courier and in transit."
+        : "Courier will pick up package once packed.",
+    },
+    {
+      title: "Delivered",
+      date: isDelivered ? updatedTime : "",
+      completed: isDelivered,
+      current: false,
+      description: isDelivered
+        ? "Package successfully delivered to your shipping address."
+        : "Package will be delivered to your doorstep.",
+    },
+  ];
+}
 
 export default async function CustomerDashboardPage() {
   const user = await getUserSession();
   const userName = user?.name || "Customer";
 
-  // Fetch real wishlist for the overview preview
+  let rawOrders: any[] = [];
   let wishlistItems: CustomerWishlistItem[] = [];
+  let rawTransactions: any[] = [];
+
   if (user?.id) {
-    const res = await getWishlistByUserId(user.id);
-    const raw = res?.data?.items || (Array.isArray(res?.data) ? res.data : []);
-    wishlistItems = raw
-      .filter((item: any) => item?.productId)
-      .map((item: any) => {
-        const p = item.productId;
-        return {
-          id: item._id,
-          productId: p._id || p.id,
-          title: p.title,
-          slug: p.slug,
-          price: p.price,
-          originalPrice: p.originalPrice,
-          image: p.image,
-          inStock: p.inStock ?? true,
-          rating: p.rating || 5,
-          category: p.category?.name || "Electronics",
-          addedAt: item.createdAt
-            ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-            : "",
-        };
-      });
+    try {
+      const [ordersRes, wishlistRes, transRes] = await Promise.allSettled([
+        getOrdersByUserId(user.id),
+        getWishlistByUserId(user.id),
+        getTransactionsByUserId(user.id),
+      ]);
+
+      if (ordersRes.status === "fulfilled") {
+        rawOrders = Array.isArray(ordersRes.value?.data?.orders)
+          ? ordersRes.value.data.orders
+          : Array.isArray(ordersRes.value?.data)
+          ? ordersRes.value.data
+          : Array.isArray(ordersRes.value)
+          ? ordersRes.value
+          : [];
+      }
+
+      if (wishlistRes.status === "fulfilled") {
+        const rawWishlist =
+          wishlistRes.value?.data?.items ||
+          (Array.isArray(wishlistRes.value?.data) ? wishlistRes.value.data : []);
+
+        wishlistItems = rawWishlist
+          .filter((item: any) => item?.productId)
+          .map((item: any) => {
+            const p = item.productId;
+            return {
+              id: item._id,
+              productId: p._id || p.id,
+              title: p.title || "Product",
+              slug: p.slug || "",
+              price: p.price ?? 0,
+              originalPrice: p.originalPrice,
+              image: p.image || (Array.isArray(p.additionalImages) && p.additionalImages[0]) || "",
+              inStock: p.inStock ?? true,
+              rating: p.rating || 5,
+              category: p.category?.name || p.categoryId?.name || "Electronics",
+              addedAt: item.createdAt
+                ? new Date(item.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                : "",
+              ownerId: p.ownerId || p.userId,
+            };
+          });
+      }
+
+      if (transRes.status === "fulfilled") {
+        rawTransactions = Array.isArray(transRes.value?.data?.transactions)
+          ? transRes.value.data.transactions
+          : Array.isArray(transRes.value?.data)
+          ? transRes.value.data
+          : Array.isArray(transRes.value)
+          ? transRes.value
+          : [];
+      }
+    } catch (err) {
+      console.error("Failed to fetch customer data:", err);
+    }
   }
 
-  const stats = STAT_CARDS_DATA.map((card) =>
-    card.iconName === "Heart" ? { ...card, value: `${wishlistItems.length} Items` } : card
+  // Aggregate stats & 4+ graph data points
+  const aggregated = aggregateCustomerDashboard(
+    rawOrders,
+    wishlistItems,
+    rawTransactions,
+    user
   );
+
+  // Format real customer orders for the overview order list & tracking modal
+  const customerOrders: CustomerOrder[] = rawOrders.map((order: any): CustomerOrder => {
+    const items: CustomerOrderItem[] = (order.items || []).map((item: any, idx: number) => {
+      const prod = typeof item.productId === "object" && item.productId !== null ? item.productId : null;
+      const image =
+        item.image ||
+        prod?.image ||
+        (Array.isArray(prod?.additionalImages) && prod.additionalImages[0]) ||
+        "";
+      const slug =
+        prod?.slug ||
+        (item.title || prod?.title || `item-${idx}`).toLowerCase().replace(/\s+/g, "-");
+
+      return {
+        id: item._id || `${order._id}-${idx}`,
+        name: item.title || prod?.title || `Item #${idx + 1}`,
+        slug,
+        image,
+        price: item.price ?? prod?.price ?? 0,
+        quantity: item.quantity ?? 1,
+      };
+    });
+
+    const orderIdStr: string = order._id?.toString() || order.id || "";
+    const shortId = orderIdStr.slice(-6).toUpperCase();
+    const shippingAddr = order.shippingAddress
+      ? `${order.shippingAddress.address || ""}, ${order.shippingAddress.city || ""} - ${order.shippingAddress.postalCode || ""}`
+      : "Default Shipping Address";
+
+    return {
+      id: orderIdStr,
+      orderNumber: `#ORD-${shortId}`,
+      date: order.createdAt
+        ? new Date(order.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })
+        : "Recent",
+      status: mapOrderStatus(order.orderStatus || "processing"),
+      paymentStatus: "Paid",
+      paymentMethod: mapPaymentMethod(order.paymentMethod),
+      total: order.totalAmount ?? 0,
+      itemCount: items.length,
+      items,
+      shippingAddress: shippingAddr,
+      timeline: buildTimeline(
+        order.orderStatus || "processing",
+        order.createdAt,
+        order.updatedAt
+      ),
+    };
+  });
+
+  // Format real transactions
+  const customerTransactions: CustomerTransaction[] = rawTransactions.map((tx: any, idx: number) => {
+    const txId = tx._id?.toString() || tx.id || `tx-${idx}`;
+    const orderObj = typeof tx.orderId === "object" ? tx.orderId : null;
+    const orderIdStr = orderObj?._id?.toString() || tx.orderId || "";
+    const orderNum = `#ORD-${(orderIdStr || txId).slice(-6).toUpperCase()}`;
+
+    return {
+      id: txId,
+      orderId: orderIdStr,
+      orderNumber: orderNum,
+      date: tx.createdAt
+        ? new Date(tx.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })
+        : "Recent",
+      amount: tx.amount ?? 0,
+      status: tx.status === "success" ? "Completed" : tx.status === "pending" ? "Pending" : "Failed",
+      paymentMethod: mapPaymentMethod(tx.method),
+      cardLast4: tx.reference?.slice(-4) || "••••",
+      type: "Payment",
+      invoiceNumber: `INV-${new Date().getFullYear()}-${txId.slice(-4).toUpperCase()}`,
+    };
+  });
 
   return (
     <CustomerOverviewClient
-      stats={stats}
-      spendingData={SPENDING_GRAPH_DATA}
-      spendingVsSavingsData={SPENDING_VS_SAVINGS_DATA}
-      categoryData={CATEGORY_GRAPH_DATA}
-      orderStatusData={ORDER_STATUS_DISTRIBUTION}
-      recentOrders={RECENT_ORDERS_DATA}
+      stats={aggregated.stats}
+      spendingData={aggregated.spendingData}
+      spendingVsSavingsData={aggregated.spendingVsSavingsData}
+      categoryData={aggregated.categoryData}
+      orderStatusData={aggregated.orderStatusData}
+      paymentMethodData={aggregated.paymentMethodData}
+      recentOrders={customerOrders}
       wishlistItems={wishlistItems}
-      recentTransactions={RECENT_TRANSACTIONS_DATA}
+      recentTransactions={customerTransactions}
       userName={userName}
+      rewardPoints={aggregated.rewardPoints}
+      membershipTier={aggregated.membershipTier}
     />
   );
 }

@@ -14,9 +14,31 @@ export interface SpendingDataPoint {
   orders: number;
 }
 
+export interface CustomerSpendingVsSavings {
+  month: string;
+  spending: number;
+  savings: number;
+  orders: number;
+}
+
 export interface CategoryPurchaseData {
   name: string;
   value: number;
+  amount: number;
+  color: string;
+}
+
+export interface CustomerOrderStatusItem {
+  name: string;
+  value: number;
+  count?: number;
+  color: string;
+}
+
+export interface CustomerPaymentMethodItem {
+  name: string;
+  value: number;
+  count: number;
   amount: number;
   color: string;
 }
@@ -42,7 +64,7 @@ export interface CustomerOrder {
   id: string;
   orderNumber: string;
   date: string;
-  status: "Processing" | "Shipped" | "Delivered" | "Cancelled" | "Refunded";
+  status: "Processing" | "Shipped" | "Delivered" | "Cancelled" | "Refunded" | "Pending";
   paymentStatus: "Paid" | "Pending" | "Failed" | "Refunded";
   paymentMethod: string;
   total: number;
@@ -68,6 +90,7 @@ export interface CustomerWishlistItem {
   rating: number;
   category: string;
   addedAt: string;
+  ownerId?: string;
 }
 
 export interface CustomerTransaction {
@@ -77,7 +100,7 @@ export interface CustomerTransaction {
   date: string;
   amount: number;
   status: "Completed" | "Pending" | "Failed" | "Refunded";
-  paymentMethod: "Visa" | "Mastercard" | "PayPal" | "Apple Pay" | "Stripe" | "Cash on Delivery";
+  paymentMethod: string;
   cardLast4?: string;
   type: "Payment" | "Refund" | "Cashback";
   invoiceNumber: string;

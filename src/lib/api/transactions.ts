@@ -8,13 +8,13 @@ export const getTransactions = async (params?: Record<string, any>) => {
     });
   }
   const qs = query.toString();
-  return serverFetch(`/transactions${qs ? `?${qs}` : ""}`, true);
+  return serverFetch(`/transactions${qs ? `?${qs}` : ""}`);
 };
 
 export const getTransactionsByUserId = async (userId: string) => {
-  return serverFetch(`/transactions?userId=${userId}`, true);
+  return serverFetch(`/transactions?userId=${userId}`);
 };
 
 export const getTransactionsByOrderId = async (orderId: string) => {
-  return serverFetch(`/transactions?orderId=${orderId}`, true);
+  return serverFetch(`/transactions?orderId=${orderId}`);
 };

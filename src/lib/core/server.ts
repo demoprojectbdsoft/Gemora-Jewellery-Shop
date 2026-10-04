@@ -27,13 +27,14 @@ const handleResponse = async (res: Response) => {
 export const serverFetch = async (path: string, requireAuth: boolean = false) => {
   const headers: HeadersInit = {};
 
-  if (requireAuth) {
-    const token = await getToken();
-    if (!token) return null;
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
   try {
+    if (requireAuth) {
+      const token = await getToken();
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+    }
+
     const res = await fetch(`${Api}${path}`, {
       cache: "no-store",
       headers,
@@ -45,7 +46,7 @@ export const serverFetch = async (path: string, requireAuth: boolean = false) =>
 
     return await handleResponse(res);
   } catch (err) {
-    console.error("serverFetch error:", (err as Error).message);
+    console.error("serverFetch error for path", path, ":", (err as Error).message);
     return null;
   }
 };

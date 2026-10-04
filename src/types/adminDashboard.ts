@@ -5,7 +5,7 @@ export interface StatCardItem {
   value: string;
   change: string;
   isPositive: boolean;
-  iconName: "DollarSign" | "ShoppingBag" | "Users" | "TrendingUp";
+  iconName: "DollarSign" | "ShoppingBag" | "Users" | "TrendingUp" | "Package" | "CreditCard";
 }
 
 export interface RevenueDataPoint {
@@ -17,7 +17,41 @@ export interface RevenueDataPoint {
 export interface CategoryDataPoint {
   name: string;
   value: number;
+  count?: number;
   color: string;
+}
+
+export interface OrderStatusDataPoint {
+  name: string;
+  value: number;
+  count: number;
+  amount: number;
+  color: string;
+}
+
+export interface PaymentMethodDataPoint {
+  name: string;
+  value: number;
+  count: number;
+  amount: number;
+  color: string;
+}
+
+export interface TopProductItem {
+  id: string;
+  title: string;
+  image: string;
+  category: string;
+  price: number;
+  unitsSold: number;
+  revenue: number;
+}
+
+export interface AdminKPIs {
+  avgOrderValue: number;
+  deliverySuccessRate: number;
+  totalProducts: number;
+  totalTransactions: number;
 }
 
 export interface RecentOrder {
@@ -26,7 +60,7 @@ export interface RecentOrder {
   email: string;
   product: string;
   amount: string;
-  status: "Completed" | "Processing" | "Pending" | "Cancelled";
+  status: "Completed" | "Processing" | "Pending" | "Cancelled" | "Shipped" | "Delivered";
   date: string;
 }
 
@@ -57,11 +91,10 @@ export interface Transaction {
         image?: string;
         avatar?: string;
       };
-  method: "cod" | "bkash" | "rocket" | "nagad";
+  method: "cod" | "bkash" | "rocket" | "nagad" | string;
   amount: number;
-  status: "pending" | "success" | "failed";
+  status: "pending" | "success" | "failed" | string;
   reference: string;
   createdAt?: string;
   updatedAt?: string;
 }
-
