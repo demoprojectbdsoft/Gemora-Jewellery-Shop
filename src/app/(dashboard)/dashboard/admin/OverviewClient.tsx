@@ -52,6 +52,7 @@ import {
   AdminKPIs,
   RecentOrder,
 } from "@/types/adminDashboard";
+import { exportAdminOverviewCsv } from "@/lib/csvExport";
 
 interface OverviewClientProps {
   stats: StatCardItem[];
@@ -88,11 +89,40 @@ export default function OverviewClient({
   const [selectedTimeframe, setSelectedTimeframe] = useState("This Year");
   const [revenueMetric, setRevenueMetric] = useState<"both" | "revenue" | "orders">("both");
 
+  /**
+   * Handles exporting all Admin Overview data:
+   * - Key Stat Cards & KPIs
+   * - Monthly Revenue & Order Volume (Graph 1)
+   * - Category Share & Catalog Distribution (Graph 2)
+   * - Order Fulfillment Pipeline (Graph 3)
+   * - Payment Gateways & Revenue Flow (Graph 4)
+   * - Top Performing Products Matrix
+   * - Recent Store Orders Table
+   * 
+   * Formats into a clean, UTF-8 BOM enabled CSV file with robust escaping to prevent broken data.
+   */
   const handleExportAnalytics = () => {
-    toast.success("Generating store performance & sales report...");
-    setTimeout(() => {
-      toast.info("Report downloaded: electro_admin_analytics_2026.csv");
-    }, 1000);
+    try {
+      toast.info("Generating store performance & sales CSV report...");
+      
+      // Execute the CSV export with all live data points and current timeframe
+      exportAdminOverviewCsv({
+        timeframe: selectedTimeframe,
+        stats,
+        kpis,
+        revenueData,
+        categoryData,
+        orderStatusData,
+        paymentMethodData,
+        topProducts,
+        recentOrders,
+      });
+
+      toast.success("Admin Overview CSV report exported successfully!");
+    } catch (error) {
+      console.error("Failed to export admin overview CSV:", error);
+      toast.error("Failed to export CSV report. Please try again.");
+    }
   };
 
   const totalCategoryItems = categoryData.reduce((acc, c) => acc + (c.count || 0), 0);

@@ -66,6 +66,7 @@ import {
   CustomerWishlistItem,
   CustomerTransaction,
 } from "@/types/customerDashboard";
+import { exportCustomerOverviewCsv } from "@/lib/csvExport";
 
 export interface CustomerStatCard {
   title: string;
@@ -156,11 +157,46 @@ export default function CustomerOverviewClient({
     toast.info("Item removed from wishlist");
   };
 
+  /**
+   * Handles exporting all Customer Overview data:
+   * - Customer Profile (Name, Tier, Reward Points)
+   * - Key Shopping Stat Cards
+   * - Monthly Spending Activity & Order Velocity (Graph 1)
+   * - Category Affinity Distribution (Graph 2)
+   * - Monthly Spending vs Promo Savings (Graph 3)
+   * - Order Delivery Journey & Status (Graph 4)
+   * - Preferred Payment Methods (Graph 5)
+   * - Recent Orders & Purchased Items Table
+   * - Saved Wishlist Items
+   * - Settlements & Transactions Table
+   * 
+   * Formats into a clean, UTF-8 BOM enabled CSV file with robust escaping to prevent data issues.
+   */
   const handleExportReport = () => {
-    toast.success("Exporting your customer account & spending report...");
-    setTimeout(() => {
-      toast.info("Customer_Shopping_Report_2026.csv downloaded successfully!");
-    }, 1200);
+    try {
+      toast.info("Generating your customer account & shopping CSV report...");
+
+      // Execute the CSV export with all live customer data points
+      exportCustomerOverviewCsv({
+        userName,
+        membershipTier,
+        rewardPoints,
+        stats,
+        spendingData,
+        categoryData,
+        spendingVsSavingsData,
+        orderStatusData,
+        paymentMethodData,
+        recentOrders,
+        wishlistItems: wishlist,
+        recentTransactions,
+      });
+
+      toast.success("Customer Overview CSV report exported successfully!");
+    } catch (error) {
+      console.error("Failed to export customer overview CSV:", error);
+      toast.error("Failed to export CSV report. Please try again.");
+    }
   };
 
   const totalSpentAll = spendingData.reduce((acc, curr) => acc + curr.amount, 0);
