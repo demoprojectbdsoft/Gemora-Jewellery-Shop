@@ -77,6 +77,7 @@ To design and build a realistic, end-to-end electronics e-commerce platform — 
 - **Shop page** — full product grid with search, category/price filters, sorting, and pagination handled against the backend, plus a dedicated product details page per product slug.
 - **Store Locator** — a dedicated page for finding physical store locations.
 - **Dark / Light theme** — toggle via `next-themes`, consistent across the whole site.
+- **Installable as an app (PWA)** — a web manifest lets customers install Electro directly to their desktop or mobile home screen, with its own name, icon, and standalone (browser-free) window.
 
 ### Shopping & Checkout
 - **Cart & Wishlist** — persisted per user in the database (one record per user+product, quantity updated in place — not reconstructed from a local array), so a signed-in user's cart survives across devices.
