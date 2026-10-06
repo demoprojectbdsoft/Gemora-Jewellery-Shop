@@ -141,6 +141,7 @@ export interface Product {
   description?: string;
   specifications?: Record<string, string>;
   isFeatured?: boolean;
+  offerEndDate?: string | Date;
 }
 
 // ─── Brand ───────────────────────────────────────────────────────────────────

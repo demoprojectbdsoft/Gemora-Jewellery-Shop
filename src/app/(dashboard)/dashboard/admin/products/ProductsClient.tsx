@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-toastify";
 import ImageUploader from "@/components/shared/ImageUploader";
+import HeroUIDateTimePicker from "@/components/shared/HeroUIDateTimePicker";
 import { Product, Category, SubCategory } from "@/types";
 import { updateProduct, deleteProduct } from "@/lib/action/products";
 
@@ -168,6 +169,7 @@ export default function ProductsClient({
     badges: new Set<string>(),
     inStock: true,
     isFeatured: false,
+    offerEndDate: "",
   });
   const [editSpecs, setEditSpecs] = useState<SpecRow[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -247,6 +249,7 @@ export default function ProductsClient({
       badges: badgeSet,
       inStock: p.inStock,
       isFeatured: !!p.isFeatured,
+      offerEndDate: p.offerEndDate ? new Date(p.offerEndDate).toISOString() : "",
     });
     setEditSpecs(specs);
     setIsEditOpen(true);
@@ -305,6 +308,7 @@ export default function ProductsClient({
       badges: Array.from(editForm.badges),
       inStock: hasEditPositiveStock ? true : editForm.inStock,
       isFeatured: editForm.isFeatured,
+      offerEndDate: editForm.offerEndDate ? new Date(editForm.offerEndDate).toISOString() : undefined,
       specifications: specObj,
     };
 
@@ -1060,6 +1064,19 @@ export default function ProductsClient({
                       </Switch>
                     </div>
                   </div>
+
+                  {/* Deal Countdown End Date Picker */}
+                  <HeroUIDateTimePicker
+                    label="Special Deal Countdown End Date & Time"
+                    value={editForm.offerEndDate}
+                    onChange={(isoString) =>
+                      setEditForm((prev) => ({
+                        ...prev,
+                        offerEndDate: isoString,
+                      }))
+                    }
+                    helperText="When the countdown timer finishes, the product deal price automatically resets to original price across the entire store."
+                  />
                 </div>
 
                 {/* 3. Media Upload */}

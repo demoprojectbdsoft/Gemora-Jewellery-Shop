@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { Category, SubCategory } from "@/types";
 import ImageUploader from "@/components/shared/ImageUploader";
+import HeroUIDateTimePicker from "@/components/shared/HeroUIDateTimePicker";
 import { addProduct } from "@/lib/action/products";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -95,6 +96,7 @@ export default function AddProductClient({
     description: "",
     inStock: true,
     isFeatured: false,
+    offerEndDate: "",
   });
 
   // ── Category & subcategory selection ───────────────────────────────────────
@@ -271,6 +273,7 @@ export default function AddProductClient({
       specifications: Object.keys(specObj).length > 0 ? specObj : undefined,
       inStock: hasPositiveStock ? true : formState.inStock,
       isFeatured: formState.isFeatured,
+      offerEndDate: formState.offerEndDate ? new Date(formState.offerEndDate).toISOString() : undefined,
     };
 
     try {
@@ -705,6 +708,19 @@ export default function AddProductClient({
                     }
                   />
                 </div>
+
+                {/* ── Countdown / Special Deal End Date ── */}
+                <HeroUIDateTimePicker
+                  label="Deal Countdown End Date & Time"
+                  value={formState.offerEndDate}
+                  onChange={(isoString) =>
+                    setFormState((prev) => ({
+                      ...prev,
+                      offerEndDate: isoString,
+                    }))
+                  }
+                  helperText="When the countdown timer finishes, the product price will automatically reset to original price."
+                />
               </Card.Content>
             </Card>
 

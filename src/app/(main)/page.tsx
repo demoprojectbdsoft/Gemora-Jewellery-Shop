@@ -11,6 +11,7 @@ import { PromoBanner, TabletPromoProps } from "@/types/home";
 import TabletPromoBanner from "@/components/homepage/TabletPromoBanner";
 import Brand from "@/components/homepage/Brand";
 import { getProducts } from "@/lib/api/products";
+import { getSlides } from "@/lib/api/slides";
 
 // ─── Static data ─────────────────────────────────────────────────────────────
 
@@ -51,6 +52,17 @@ const tabletPromoData: TabletPromoProps = {
 
 // ─── Per-section async server components ─────────────────────────────────────
 
+async function HeroSliderSection() {
+  const slidesRes = await getSlides("isActive=true");
+  const slides = Array.isArray(slidesRes?.data)
+    ? slidesRes.data
+    : Array.isArray(slidesRes)
+    ? slidesRes
+    : [];
+
+  return <HeroSlider initialSlides={slides} />;
+}
+
 async function NewArrivalsSection() {
   const res = await getProducts({ sort: "newest", limit: 14 });
   const products: Product[] = res?.data?.products ?? [];
@@ -81,7 +93,9 @@ export default function Home() {
             <CategoriesDropdown variant="docked" label="All Departments" />
           </div>
           <div className="flex-1 min-w-0 w-full relative z-10">
-            <HeroSlider />
+            <Suspense fallback={<HeroSlider />}>
+              <HeroSliderSection />
+            </Suspense>
           </div>
         </div>
       </section>
@@ -110,5 +124,3 @@ export default function Home() {
     </>
   );
 }
-
-

@@ -42,3 +42,23 @@ export interface TabletPromoProps {
   cents?: string;
   imageSrc?: string;
 }
+
+export interface SlideItem {
+  id: string;
+  _id?: string;
+  ownerId?: string;
+  productId: string;
+  tabTitle: string;
+  subtitle: string;
+  tagline: string;
+  targetDate: string | Date;
+  order?: number;
+  isActive?: boolean;
+  productName?: string;
+  price?: number | string;
+  originalPrice?: number | string;
+  image?: string;
+  href?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}

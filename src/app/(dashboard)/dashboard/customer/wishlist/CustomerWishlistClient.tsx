@@ -106,7 +106,7 @@ function WishlistProductCard({
 
       {/* Image */}
       <Link
-        href={`/productdetails?slug=${item.slug || item.productId}`}
+        href={`/shop/${item.slug || item.productId}`}
         className="block relative aspect-square w-full rounded-xl overflow-hidden bg-slate-50 dark:bg-gray-950 mb-3"
       >
         <Image
@@ -129,7 +129,7 @@ function WishlistProductCard({
         </div>
 
         <Link
-          href={`/productdetails?slug=${item.slug || item.productId}`}
+          href={`/shop/${item.slug || item.productId}`}
           className="font-bold text-xs sm:text-sm text-gray-900 dark:text-white line-clamp-2 hover:text-sky-600 transition-colors"
         >
           {item.title}

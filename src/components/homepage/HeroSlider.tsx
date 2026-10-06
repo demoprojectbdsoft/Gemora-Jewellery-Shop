@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { ArrowRight, ShoppingCart } from "lucide-react";
+import { ArrowRight, ShoppingCart, Sparkles } from "lucide-react";
+import { SlideItem } from "@/types";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 export interface SlideData {
@@ -18,86 +19,23 @@ export interface SlideData {
   targetDate: Date;
 }
 
-// ─── Slide Data ─────────────────────────────────────────────────────────────
-const SLIDES: SlideData[] = [
-  {
-    id: "4k-tvs",
-    tabTitle: "SO MUCH TO WATCH IN 4K TVS",
-    subtitle: "LIMITED WEEK DEAL",
-    tagline: "HURRY UP BEFORE OFFER WILL END",
-    productName: "Ultra HD 4K Smart TV 55 Inch",
-    price: "$399.00",
-    originalPrice: "$499.00",
-    image: "https://i.ibb.co.com/mVYgHKHt/black-color-wall-mount-32-inch-smart-led-tv-full-hd-display-065-removebg-preview.png",
-    href: "/productdetails",
-    targetDate: new Date(Date.now() + 1000 * 60 * 60 * 14 + 1000 * 60 * 22),
-  },
-  {
-    id: "game-consoles",
-    tabTitle: "GAME CONSOLES",
-    subtitle: "LIMITED WEEK DEAL",
-    tagline: "HURRY UP BEFORE OFFER WILL END",
-    productName: "Game Console Controller + USB 3.0 Cable",
-    price: "$90.00",
-    originalPrice: "$99.00",
-    image: "https://i.ibb.co.com/1tR8Pt8S/392223-large-removebg-preview.png",
-    href: "/productdetails",
-    targetDate: new Date(Date.now() + 1000 * 60 * 60 * 8 + 1000 * 60 * 19),
-  },
-  {
-    id: "gamepad-deal",
-    tabTitle: "LIMITED WEEK DEAL - GAMEPAD",
-    subtitle: "EXCLUSIVE OFFER",
-    tagline: "SPECIAL DISCOUNT THIS WEEK",
-    productName: "Wireless Gaming Controller Pro",
-    price: "$55.00",
-    originalPrice: "$75.00",
-    image: "https://i.ibb.co.com/Q3Sjxy1L/havit-game-pad-g158bt-pro-wiredhavit-business-215824-1024x1024-crop-center-removebg-preview.png",
-    href: "/productdetails",
-    targetDate: new Date(Date.now() + 1000 * 60 * 60 * 5 + 1000 * 60 * 10),
-  },
-  {
-    id: "headphones",
-    tabTitle: "SECOND PRODUCT 40% CHEAPER",
-    subtitle: "MEGA DISCOUNT",
-    tagline: "BUY ONE GET SECOND AT 40% OFF",
-    productName: "Noise Cancelling Headphones",
-    price: "$120.00",
-    originalPrice: "$200.00",
-    image: "https://i.ibb.co.com/BVpxvpWr/Zeb-Blast-Z-pic2-removebg-preview.png",
-    href: "/productdetails",
-    targetDate: new Date(Date.now() + 1000 * 60 * 60 * 18),
-  },
-  {
-    id: "usb-cable",
-    tabTitle: "$10 BUCKS OR LESS",
-    subtitle: "CLEARANCE SALE",
-    tagline: "TOP ACCESSORIES UNDER $10",
-    productName: "High Speed USB-C Cable",
-    price: "$8.99",
-    originalPrice: "$15.00",
-    image: "https://i.ibb.co.com/5X01M2Wy/71m3-HJg-LTZL-AC-UF894-1000-QL80-removebg-preview.png",
-    href: "/productdetails",
-    targetDate: new Date(Date.now() + 1000 * 60 * 60 * 2 + 1000 * 60 * 45),
-  },
-];
-
-// Fallback image used when any slide image fails to load
+// Fallback image used when slide image fails to load
 const FALLBACK_IMAGE =
   "https://i.ibb.co.com/Q3Tpt7Df/industries-consumer-electronics-removebg-preview.png";
 
 // ─── Countdown Hook ──────────────────────────────────────────────────────────
-function useCountdown(targetDate: Date) {
+function useCountdown(targetDate?: Date) {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
+    if (!targetDate) return;
     const tick = () => {
       const diff = targetDate.getTime() - Date.now();
       if (diff > 0) {
         setTimeLeft({
-          hours:   Math.floor(diff / 3_600_000),
+          hours: Math.floor(diff / 3_600_000),
           minutes: Math.floor((diff / 60_000) % 60),
-          seconds: Math.floor((diff / 1_000)  % 60),
+          seconds: Math.floor((diff / 1_000) % 60),
         });
       } else {
         setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
@@ -114,7 +52,7 @@ function useCountdown(targetDate: Date) {
 // ─── Countdown Box ───────────────────────────────────────────────────────────
 function CountdownBox({ value, label }: { value: number; label: string }) {
   return (
-    <div className="border-2 border-primary rounded-md p-1.5 w-12 text-center bg-white dark:bg-gray-800 shadow-sm">
+    <div className="border-2 border-primary rounded-md p-1.5 w-12 text-center bg-white dark:bg-gray-800 shadow-xs">
       <span className="block text-lg font-bold text-gray-800 dark:text-white leading-none">
         {String(value).padStart(2, "0")}
       </span>
@@ -123,28 +61,93 @@ function CountdownBox({ value, label }: { value: number; label: string }) {
   );
 }
 
+interface HeroSliderProps {
+  initialSlides?: SlideItem[] | any[];
+}
+
 // ─── Main Slider ─────────────────────────────────────────────────────────────
-export default function HeroSlider() {
+export default function HeroSlider({ initialSlides = [] }: HeroSliderProps) {
+  const slides: SlideData[] = useMemo(() => {
+    if (!Array.isArray(initialSlides) || initialSlides.length === 0) {
+      return [];
+    }
+    return initialSlides.map((s, idx) => {
+      const target = s.targetDate ? new Date(s.targetDate) : new Date(Date.now() + 86400000);
+      const validTarget = isNaN(target.getTime()) ? new Date(Date.now() + 86400000) : target;
+      const priceStr =
+        typeof s.price === "number"
+          ? `$${s.price.toFixed(2)}`
+          : s.price || "$0.00";
+      const origPriceStr =
+        typeof s.originalPrice === "number"
+          ? `$${s.originalPrice.toFixed(2)}`
+          : s.originalPrice;
+
+      const displayName = s.productName || s.title || s.tabTitle || `OFFER ${idx + 1}`;
+
+      return {
+        id: s.id || s._id || `slide-${idx}`,
+        tabTitle: displayName,
+        subtitle: s.subtitle || "FEATURED DEAL",
+        tagline: s.tagline || "SPECIAL OFFER FOR LIMITED TIME",
+        productName: s.productName || s.title || "Featured Product",
+        price: priceStr,
+        originalPrice: origPriceStr,
+        image: s.image || FALLBACK_IMAGE,
+        href: s.href || "/shop",
+        targetDate: validTarget,
+      };
+    });
+  }, [initialSlides]);
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const slide = SLIDES[currentSlide];
-  const { hours, minutes, seconds } = useCountdown(slide.targetDate);
-
   // Auto-advance every 5 s, reset on manual tab click, pause on hover
   useEffect(() => {
-    if (isPaused) return;
-    const id = setInterval(
-      () => setCurrentSlide((p) => (p + 1) % SLIDES.length),
-      5000
-    );
+    if (isPaused || slides.length <= 1) return;
+    const id = setInterval(() => {
+      setCurrentSlide((p) => (p + 1) % slides.length);
+    }, 5000);
     return () => clearInterval(id);
-  }, [currentSlide, isPaused]);
+  }, [currentSlide, isPaused, slides.length]);
+
+  // If no slides exist in the database
+  if (slides.length === 0) {
+    return (
+      <div className="w-full">
+        <div className="relative bg-gradient-to-br from-slate-50 via-sky-50/40 to-blue-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 rounded-xl overflow-hidden border border-gray-200/80 dark:border-gray-800 p-8 md:p-12 flex flex-col items-center justify-center text-center min-h-[360px] space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+            <Sparkles className="w-6 h-6" />
+          </div>
+          <div className="max-w-md space-y-1.5">
+            <h3 className="text-xl font-extrabold text-gray-900 dark:text-white">
+              Discover Exclusive Tech Deals
+            </h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Browse our complete catalog of electronics, gadgets, and top accessories.
+            </p>
+          </div>
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary hover:bg-primary/90 text-white text-xs font-bold shadow-md transition-all"
+          >
+            <span>Explore Shop</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const activeIndex = currentSlide < slides.length ? currentSlide : 0;
+  const slide = slides[activeIndex];
+  const { hours, minutes, seconds } = useCountdown(slide?.targetDate);
 
   return (
     <div className="w-full">
       <div
-        className="relative bg-gradient-to-b from-[#f8f9fa] via-[#f3f4f6] to-[#eef0f3] dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 rounded-xl overflow-hidden border border-gray-200/80 dark:border-gray-800 shadow-sm"
+        className="relative bg-gradient-to-b from-[#f8f9fa] via-[#f3f4f6] to-[#eef0f3] dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 rounded-xl overflow-hidden border border-gray-200/80 dark:border-gray-800 shadow-xs"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -153,12 +156,12 @@ export default function HeroSlider() {
 
           {/* Left – headline & tagline */}
           <div
-            key={`left-${currentSlide}`}
+            key={`left-${activeIndex}`}
             className="slide-anim-left md:col-span-4 space-y-3 text-center md:text-left"
           >
             <h3 className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-800 dark:text-gray-100 tracking-tight leading-none uppercase">
-              {slide.subtitle.split(" ")[0]} <br />
-              <span className="font-bold">{slide.subtitle.split(" ").slice(1).join(" ")}</span>
+              {slide.subtitle?.split(" ")[0]} <br />
+              <span className="font-bold">{slide.subtitle?.split(" ").slice(1).join(" ")}</span>
             </h3>
             <p className="text-xs font-semibold tracking-wider text-gray-500 dark:text-gray-300 uppercase">
               {slide.tagline}
@@ -177,7 +180,7 @@ export default function HeroSlider() {
           {/* Center – product image */}
           <div className="md:col-span-5 flex justify-center items-center h-64 md:h-80">
             <Link
-              key={`img-${currentSlide}`}
+              key={`img-${activeIndex}`}
               href={slide.href}
               className="slide-anim-image w-full h-full max-w-[320px] flex items-center justify-center cursor-pointer group"
             >
@@ -198,7 +201,7 @@ export default function HeroSlider() {
 
           {/* Right – product name, price, countdown */}
           <div
-            key={`right-${currentSlide}`}
+            key={`right-${activeIndex}`}
             className="slide-anim-right md:col-span-3 space-y-4 text-center md:text-left"
           >
             <Link href={slide.href} className="block group">
@@ -215,9 +218,9 @@ export default function HeroSlider() {
             </div>
 
             <div className="flex items-center justify-center md:justify-start gap-2 pt-1">
-              <CountdownBox value={hours}   label="HOURS" />
-              <CountdownBox value={minutes} label="MINS"  />
-              <CountdownBox value={seconds} label="SECS"  />
+              <CountdownBox value={hours} label="HOURS" />
+              <CountdownBox value={minutes} label="MINS" />
+              <CountdownBox value={seconds} label="SECS" />
             </div>
 
             <div className="pt-1">
@@ -234,29 +237,39 @@ export default function HeroSlider() {
         </div>
 
         {/* Tab bar */}
-        <div className="grid grid-cols-2 md:grid-cols-5 border-t border-gray-200/90 dark:border-gray-800 bg-white/90 dark:bg-gray-950/95 backdrop-blur-sm">
-          {SLIDES.map((s, i) => (
-            <button
-              key={s.id}
-              onClick={() => setCurrentSlide(i)}
-              className={`relative px-3 py-4 text-center transition-all duration-200 cursor-pointer select-none ${
-                currentSlide === i
-                  ? "bg-[#f3f4f6] dark:bg-gray-900/90 font-bold text-gray-900 dark:text-white"
-                  : "hover:bg-gray-100/60 dark:hover:bg-gray-900/40 text-gray-500 dark:text-gray-400 font-medium"
-              }`}
-            >
-              {currentSlide === i && (
-                <div className="absolute top-0 left-0 w-full">
-                  <div className="h-[3px] w-full bg-primary" />
-                  <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-primary" />
-                </div>
-              )}
-              <span className="text-[11px] leading-tight block uppercase tracking-tight pt-1">
-                {s.tabTitle}
-              </span>
-            </button>
-          ))}
-        </div>
+        {slides.length > 1 && (
+          <div
+            className="grid border-t border-gray-200/90 dark:border-gray-800 bg-white/90 dark:bg-gray-950/95 backdrop-blur-xs"
+            style={{
+              gridTemplateColumns: `repeat(${Math.min(slides.length, 5)}, minmax(0, 1fr))`,
+            }}
+          >
+            {slides.map((s, i) => (
+              <button
+                key={s.id || i}
+                onClick={() => setCurrentSlide(i)}
+                className={`relative px-3 py-4 text-center transition-all duration-200 cursor-pointer select-none ${
+                  activeIndex === i
+                    ? "bg-[#f3f4f6] dark:bg-gray-900/90 font-bold text-gray-900 dark:text-white"
+                    : "hover:bg-gray-100/60 dark:hover:bg-gray-900/40 text-gray-500 dark:text-gray-400 font-medium"
+                }`}
+              >
+                {activeIndex === i && (
+                  <div className="absolute top-0 left-0 w-full">
+                    <div className="h-[3px] w-full bg-primary" />
+                    <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-primary" />
+                  </div>
+                )}
+                <span
+                  title={s.productName || s.tabTitle}
+                  className="text-[11px] font-bold leading-tight block uppercase tracking-tight pt-1 truncate px-1"
+                >
+                  {s.tabTitle}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
 
       </div>
     </div>
