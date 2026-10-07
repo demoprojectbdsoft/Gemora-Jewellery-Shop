@@ -21,7 +21,7 @@ export interface SlideData {
 
 // Fallback image used when slide image fails to load
 const FALLBACK_IMAGE =
-  "https://i.ibb.co.com/Q3Tpt7Df/industries-consumer-electronics-removebg-preview.png";
+  "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=1200";
 
 // ─── Countdown Hook ──────────────────────────────────────────────────────────
 function useCountdown(targetDate?: Date) {
@@ -122,17 +122,17 @@ export default function HeroSlider({ initialSlides = [] }: HeroSliderProps) {
           </div>
           <div className="max-w-md space-y-1.5">
             <h3 className="text-xl font-extrabold text-gray-900 dark:text-white">
-              Discover Exclusive Tech Deals
+              Discover Exclusive Fine Jewellery
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Browse our complete catalog of electronics, gadgets, and top accessories.
+              Browse our complete catalog of diamond rings, gold necklaces, luxury bracelets, and bespoke gemstones.
             </p>
           </div>
           <Link
             href="/shop"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary hover:bg-primary/90 text-white text-xs font-bold shadow-md transition-all"
           >
-            <span>Explore Shop</span>
+            <span>Explore Collection</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

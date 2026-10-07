@@ -32,23 +32,32 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Electro - Premium Electronics Store",
-    template: "%s | Electro",
+    default: "Gemora - Luxury Fine Jewellery & Diamonds",
+    template: "%s | Gemora",
   },
-  description: "Worldwide Electronics Store with best deals, fast shipping, and top-tier tech products.",
+  description: "Gemora Fine Jewellery — Handcrafted diamond rings, necklaces, luxury bracelets, gold earrings, bridal collections, and bespoke gemstones.",
   manifest: "/manifest.webmanifest",
-  applicationName: "Electro",
+  applicationName: "Gemora",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Electro",
+    title: "Gemora",
   },
   formatDetection: {
     telephone: false,
   },
   icons: {
-    icon: "/icon.svg",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" }
+    ],
     apple: "/icon.svg",
+  },
+  openGraph: {
+    title: "Gemora - Luxury Fine Jewellery & Diamonds",
+    description: "Handcrafted diamond rings, gold necklaces, bridal sets, and precious gemstones.",
+    siteName: "Gemora",
+    type: "website",
   },
 };
 

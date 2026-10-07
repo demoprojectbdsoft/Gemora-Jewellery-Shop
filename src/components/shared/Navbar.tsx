@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Search,
   Menu,
@@ -127,9 +128,24 @@ export default function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="flex-shrink-0 flex items-center text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-[#333e48] dark:text-white"
+              className="flex-shrink-0 flex items-center py-0.5"
             >
-              electro<span className="text-primary text-2xl sm:text-3xl md:text-4xl leading-none">.</span>
+              <Image
+                src="/logo.svg"
+                alt="Gemora Fine Jewellery"
+                width={155}
+                height={38}
+                className="h-7 sm:h-8 md:h-9 w-auto object-contain dark:hidden"
+                priority
+              />
+              <Image
+                src="/logo-footer.svg"
+                alt="Gemora Fine Jewellery"
+                width={155}
+                height={38}
+                className="h-7 sm:h-8 md:h-9 w-auto object-contain hidden dark:block"
+                priority
+              />
             </Link>
 
             {/* Search Bar */}
@@ -142,7 +158,7 @@ export default function Navbar() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products..."
+                  placeholder="Search fine jewellery, diamonds, rings..."
                   className="w-full px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 bg-transparent focus:outline-none min-w-0"
                 />
                 <button
@@ -241,9 +257,22 @@ export default function Navbar() {
                 <Link
                   href="/"
                   onClick={closeAllMenus}
-                  className="text-2xl font-extrabold tracking-tight text-[#333e48] dark:text-white"
+                  className="flex items-center gap-2"
                 >
-                  electro<span className="text-primary text-3xl leading-none">.</span>
+                  <Image
+                    src="/logo.svg"
+                    alt="Gemora"
+                    width={130}
+                    height={32}
+                    className="h-7 w-auto object-contain dark:hidden"
+                  />
+                  <Image
+                    src="/logo-footer.svg"
+                    alt="Gemora"
+                    width={130}
+                    height={32}
+                    className="h-7 w-auto object-contain hidden dark:block"
+                  />
                 </Link>
                 <button
                   type="button"
@@ -283,9 +312,22 @@ export default function Navbar() {
                   <Link
                     href="/"
                     onClick={closeAllMenus}
-                    className="text-2xl font-extrabold tracking-tight text-[#333e48] dark:text-white"
+                    className="flex items-center gap-2"
                   >
-                    electro<span className="text-primary text-3xl leading-none">.</span>
+                    <Image
+                      src="/logo.svg"
+                      alt="Gemora"
+                      width={130}
+                      height={32}
+                      className="h-7 w-auto object-contain dark:hidden"
+                    />
+                    <Image
+                      src="/logo-footer.svg"
+                      alt="Gemora"
+                      width={130}
+                      height={32}
+                      className="h-7 w-auto object-contain hidden dark:block"
+                    />
                   </Link>
                   <DrawerCloseTrigger className="p-2 rounded-lg text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200/60 dark:hover:bg-gray-800 transition-colors cursor-pointer">
                     <X className="w-5 h-5" />

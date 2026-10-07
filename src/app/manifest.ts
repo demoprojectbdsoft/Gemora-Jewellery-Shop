@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Electro - Electronics Store",
-    short_name: "Electro",
-    description: "Premium Worldwide Electronics & Gadgets Store",
+    name: "Gemora - Fine Jewellery & Diamonds",
+    short_name: "Gemora",
+    description: "Exclusive Handcrafted Fine Jewellery, Diamonds & Gemstones",
     start_url: "/",
     display: "standalone",
     orientation: "portrait-primary",

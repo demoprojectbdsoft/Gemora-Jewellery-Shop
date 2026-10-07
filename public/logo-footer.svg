@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" fill="none" className="gemora-logo-footer">
+  <defs>
+    <linearGradient id="goldGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCEBA6" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#AA771C" />
+    </linearGradient>
+    <linearGradient id="gemGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#1e3a8a" />
+    </linearGradient>
+    <linearGradient id="diamondShineFooter" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <!-- Gem Emblem / Faceted Diamond Icon -->
+  <g transform="translate(4, 6)">
+    <!-- Outer Diamond Shape -->
+    <path d="M24 2 L44 14 L38 42 L24 48 L10 42 L4 14 Z" fill="url(#gemGradFooter)" stroke="url(#goldGradFooter)" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Facet Lines -->
+    <path d="M24 2 L24 48" stroke="url(#diamondShineFooter)" stroke-width="1" stroke-linecap="round"/>
+    <path d="M4 14 L44 14" stroke="url(#diamondShineFooter)" stroke-width="1"/>
+    <path d="M10 42 L38 42" stroke="url(#diamondShineFooter)" stroke-width="1"/>
+    <path d="M14 14 L24 2 L34 14 L24 48 Z" fill="#ffffff" fill-opacity="0.22" stroke="url(#goldGradFooter)" stroke-width="0.8"/>
+    <!-- Top Sparkle Star -->
+    <path d="M24 -1 L25.5 3.5 L30 5 L25.5 6.5 L24 11 L22.5 6.5 L18 5 L22.5 3.5 Z" fill="#FFF2B2"/>
+  </g>
+
+  <!-- Brand Typography for Footer & Dark Mode -->
+  <g transform="translate(62, 10)">
+    <text x="0" y="27" font-family="'Cinzel', 'Playfair Display', 'Poppins', 'Georgia', serif" font-size="27" font-weight="800" letter-spacing="3" fill="url(#goldGradFooter)">
+      GEMORA
+    </text>
+    
+    <polygon points="162,18 163.5,23 167,24 163.5,25 162,30 160.5,25 157,24 160.5,23" fill="#FFF2B2" />
+
+    <text x="1.5" y="40" font-family="'Open Sans', 'Inter', sans-serif" font-size="7.5" font-weight="600" letter-spacing="4.5" fill="#cbd5e1" text-anchor="start">
+      FINE JEWELLERY &amp; DIAMONDS
+    </text>
+  </g>
+</svg>

@@ -137,7 +137,7 @@ export default function MobileMenuContent({
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">
-                  Welcome to Electro
+                  Welcome to Gemora
                 </p>
                 <p className="text-[10px] text-gray-400 truncate">
                   Sign in to access your orders

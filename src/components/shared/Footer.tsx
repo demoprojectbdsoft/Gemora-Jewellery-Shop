@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Headphones } from "lucide-react";
 import {
   FaFacebookF,
@@ -32,24 +33,32 @@ export default function Footer() {
           {/* Column 1: Brand & Contact (Span 5) */}
           <div className="lg:col-span-5 space-y-6">
             
-            {/* Logo matching site design language */}
-            <Link href="/" className="inline-flex items-baseline group">
-              <span className="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent">
-                electro
-              </span>
-              <span className="text-3xl md:text-4xl font-black text-blue-600 dark:text-sky-400">
-                .
-              </span>
+            {/* Logo matching luxury jewellery language */}
+            <Link href="/" className="inline-flex items-center group">
+              <Image
+                src="/logo.svg"
+                alt="Gemora Fine Jewellery"
+                width={170}
+                height={42}
+                className="h-9 md:h-10 w-auto object-contain dark:hidden"
+              />
+              <Image
+                src="/logo-footer.svg"
+                alt="Gemora Fine Jewellery"
+                width={170}
+                height={42}
+                className="h-9 md:h-10 w-auto object-contain hidden dark:block"
+              />
             </Link>
 
-            {/* 24/7 Call Center Hotline Block (Gradient Blue Accents) */}
+            {/* 24/7 Call Center Hotline Block (Gradient Blue & Gold Accents) */}
             <div className="flex items-center gap-4 py-2">
               <div className="p-3.5 rounded-full bg-sky-100 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 border border-sky-200/50 dark:border-sky-800/40 shadow-xs shrink-0">
                 <Headphones className="w-7 h-7 stroke-[1.8]" />
               </div>
               <div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                  Got Questions ? Call us 24/7!
+                  Private Concierge &amp; Queries 24/7:
                 </p>
                 <p className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 tracking-tight">
                   (800) 8001-8588, (0600) 874 548
@@ -60,10 +69,10 @@ export default function Footer() {
             {/* Contact Information */}
             <div className="space-y-1">
               <h4 className="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">
-                Contact Info
+                Showroom &amp; Atelier
               </h4>
               <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                17 Princess Road, London, Greater London NW1 8JR, UK
+                17 Princess Road, Mayfair, London NW1 8JR, UK
               </p>
             </div>
 
@@ -89,20 +98,20 @@ export default function Footer() {
           {/* Column 2 & 3: Find It Fast Links (Span 4) */}
           <div className="lg:col-span-4 space-y-4">
             <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
-              Find It Fast
+              Jewellery Collections
             </h3>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs md:text-sm">
               
               {/* Left Link Group */}
               <ul className="space-y-2.5">
                 {[
-                  { name: "Laptops & Computers", query: "laptops" },
-                  { name: "Cameras & Photography", query: "cameras" },
-                  { name: "Smart Phones & Tablets", query: "tablets" },
-                  { name: "Video Games & Consoles", query: "gaming" },
-                  { name: "TV & Audio", query: "audio" },
-                  { name: "Gadgets", query: "gadgets" },
-                  { name: "Waterproof Headphones", query: "headphones" },
+                  { name: "Diamond Rings", query: "diamond-rings" },
+                  { name: "Gold Necklaces", query: "necklaces-pendants" },
+                  { name: "Luxury Bracelets", query: "bracelets-bangles" },
+                  { name: "Gemstone Earrings", query: "earrings" },
+                  { name: "Bridal & Wedding", query: "bridal-wedding" },
+                  { name: "Precious Gemstones", query: "gemstones" },
+                  { name: "High Jewellery", query: "high-jewellery" },
                 ].map((link, idx) => (
                   <li key={idx}>
                     <Link
@@ -118,12 +127,12 @@ export default function Footer() {
               {/* Right Link Group */}
               <ul className="space-y-2.5">
                 {[
-                  { name: "About", href: "/about" },
-                  { name: "Contact", href: "/contact" },
+                  { name: "About Gemora", href: "/about" },
+                  { name: "Bespoke Services", href: "/services" },
                   { name: "Wishlist", href: "/dashboard/customer/wishlist" },
-                  { name: "Compare", href: "/compare" },
-                  { name: "FAQ", href: "/faq" },
-                  { name: "Store Directory", href: "/stores" },
+                  { name: "Compare Pieces", href: "/compare" },
+                  { name: "Boutique Locator", href: "/store-locator" },
+                  { name: "Contact Concierge", href: "/contact" },
                 ].map((link, idx) => (
                   <li key={idx}>
                     <Link
@@ -148,10 +157,10 @@ export default function Footer() {
               {[
                 { name: "My Account", href: "/account" },
                 { name: "Track your Order", href: "/track-order" },
-                { name: "Customer Service", href: "/customer-service" },
-                { name: "Returns/Exchange", href: "/returns" },
-                { name: "FAQs", href: "/faq" },
-                { name: "Product Support", href: "/support" },
+                { name: "Bespoke Consultations", href: "/services" },
+                { name: "Diamond Certification", href: "/services" },
+                { name: "Jewellery Care & Sizing", href: "/services" },
+                { name: "Privacy & Terms", href: "/terms" },
               ].map((link, idx) => (
                 <li key={idx}>
                   <Link
@@ -173,7 +182,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-600 dark:text-gray-400">
           
           <p className="text-center md:text-left">
-            © <strong className="font-semibold text-gray-800 dark:text-gray-200">Electro</strong> - All Rights Reserved
+            © <strong className="font-semibold text-gray-800 dark:text-gray-200">Gemora Fine Jewellery</strong> - All Rights Reserved
           </p>
 
           <div className="flex items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">

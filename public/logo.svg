@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 60" fill="none" className="gemora-logo">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37" />
+      <stop offset="35%" stop-color="#F3E5AB" />
+      <stop offset="70%" stop-color="#AA771C" />
+      <stop offset="100%" stop-color="#85580F" />
+    </linearGradient>
+    <linearGradient id="gemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#4338ca" />
+    </linearGradient>
+    <linearGradient id="diamondShine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.9" />
+    </linearGradient>
+    <filter id="subtleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#D4AF37" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Gem Emblem / Faceted Diamond Icon -->
+  <g transform="translate(4, 6)" filter="url(#subtleGlow)">
+    <!-- Outer Shield / Diamond Shape -->
+    <path d="M24 2 L44 14 L38 42 L24 48 L10 42 L4 14 Z" fill="url(#gemGrad)" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Facet Lines -->
+    <path d="M24 2 L24 48" stroke="url(#diamondShine)" stroke-width="1" stroke-linecap="round"/>
+    <path d="M4 14 L44 14" stroke="url(#diamondShine)" stroke-width="1"/>
+    <path d="M10 42 L38 42" stroke="url(#diamondShine)" stroke-width="1"/>
+    <path d="M14 14 L24 2 L34 14 L24 48 Z" fill="#ffffff" fill-opacity="0.18" stroke="url(#goldGrad)" stroke-width="0.8"/>
+    <!-- Top Sparkle Star -->
+    <path d="M24 -1 L25.5 3.5 L30 5 L25.5 6.5 L24 11 L22.5 6.5 L18 5 L22.5 3.5 Z" fill="#F3E5AB"/>
+  </g>
+
+  <!-- Brand Typography -->
+  <g transform="translate(62, 10)">
+    <!-- Primary Brand Name "GEMORA" -->
+    <text x="0" y="27" font-family="'Cinzel', 'Playfair Display', 'Poppins', 'Georgia', 'Times New Roman', serif" font-size="27" font-weight="800" letter-spacing="3" fill="currentColor">
+      GEMORA
+    </text>
+    
+    <!-- Sparkling Diamond Dot Accent -->
+    <circle cx="162" cy="24" r="3.5" fill="url(#goldGrad)" />
+    <polygon points="162,18 163.5,23 167,24 163.5,25 162,30 160.5,25 157,24 160.5,23" fill="#F3E5AB" />
+
+    <!-- Subtitle / Tagline "FINE JEWELLERY" -->
+    <text x="1.5" y="40" font-family="'Open Sans', 'Inter', sans-serif" font-size="7.5" font-weight="600" letter-spacing="4.5" fill="#94a3b8" text-anchor="start">
+      FINE JEWELLERY
+    </text>
+  </g>
+</svg>

@@ -7,103 +7,101 @@ import Marquee from "react-fast-marquee";
 const BRANDS: BrandType[] = [
   {
     id: "1",
-    name: "Airbnb",
+    name: "GIA Certified",
     renderLogo: () => (
-      <div className="flex items-center gap-1.5 font-bold tracking-tight text-xl text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        <span className="text-2xl font-black">Δ</span>
-        <span>airbnb</span>
+      <div className="flex items-center gap-1.5 font-bold tracking-widest text-xl text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors uppercase">
+        <span className="text-2xl font-black font-serif">♦</span>
+        <span className="font-extrabold tracking-widest">GIA</span>
       </div>
     ),
   },
   {
     id: "2",
-    name: "Coinbase",
+    name: "Cartier",
     renderLogo: () => (
-      <div className="font-semibold text-xl tracking-tighter text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        coin<span className="font-bold">base</span>
+      <div className="font-serif italic text-2xl tracking-wider text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+        Cartier
       </div>
     ),
   },
   {
     id: "3",
-    name: "Dribbble",
+    name: "Tiffany & Co.",
     renderLogo: () => (
-      <div className="font-serif italic text-2xl tracking-normal text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        dribbble
+      <div className="font-serif text-xl tracking-widest text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors uppercase">
+        TIFFANY &amp; CO.
       </div>
     ),
   },
   {
     id: "4",
-    name: "Instagram",
+    name: "Bulgari",
     renderLogo: () => (
-      <div className="font-serif text-2xl tracking-wide text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        Instagram
+      <div className="font-serif font-bold text-2xl tracking-[0.25em] text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors uppercase">
+        BVLGARI
       </div>
     ),
   },
   {
     id: "5",
-    name: "Netflix",
+    name: "Van Cleef & Arpels",
     renderLogo: () => (
-      <div className="font-black text-2xl tracking-widest uppercase text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        NETFLIX
+      <div className="font-serif italic text-lg tracking-normal text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+        Van Cleef &amp; Arpels
       </div>
     ),
   },
-  /* ── Additional Brands ── */
   {
     id: "6",
-    name: "Spotify",
+    name: "Harry Winston",
     renderLogo: () => (
-      <div className="flex items-center gap-1 font-extrabold text-2xl tracking-tighter text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        <span>Spotify</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-current mb-3" />
+      <div className="flex items-center gap-1 font-serif text-lg tracking-widest uppercase text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+        <span>HARRY WINSTON</span>
       </div>
     ),
   },
   {
     id: "7",
-    name: "Slack",
+    name: "De Beers",
     renderLogo: () => (
-      <div className="font-black text-2xl tracking-tight text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        #slack
+      <div className="font-serif font-semibold text-xl tracking-widest uppercase text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+        DE BEERS
       </div>
     ),
   },
   {
     id: "8",
-    name: "Stripe",
+    name: "Chopard",
     renderLogo: () => (
-      <div className="font-black text-2xl tracking-tight text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        stripe
+      <div className="font-serif italic text-2xl tracking-wide text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+        Chopard
       </div>
     ),
   },
   {
     id: "9",
-    name: "Shopify",
+    name: "Graff",
     renderLogo: () => (
-      <div className="font-bold text-xl tracking-wide text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        shopify<span className="font-light">.</span>
+      <div className="font-serif font-bold text-2xl tracking-[0.3em] uppercase text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+        GRAFF
       </div>
     ),
   },
   {
     id: "10",
-    name: "Discord",
+    name: "Swarovski",
     renderLogo: () => (
-      <div className="font-black text-xl tracking-wider uppercase text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        DISCORD
+      <div className="font-serif font-light text-xl tracking-widest uppercase text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+        SWAROVSKI
       </div>
     ),
   },
   {
     id: "11",
-    name: "Figma",
+    name: "Boucheron",
     renderLogo: () => (
-      <div className="font-serif italic text-2xl tracking-tight text-slate-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">
-        Figma
+      <div className="font-serif font-bold text-xl tracking-widest uppercase text-slate-400 dark:text-gray-500 hover:text-amber-500 dark:hover:text-amber-400 transition-colors">
+        BOUCHERON
       </div>
     ),
   },

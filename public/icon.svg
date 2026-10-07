@@ -1,18 +1,56 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
-    <linearGradient id="electroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0284c7" />
-      <stop offset="50%" stop-color="#2563eb" />
-      <stop offset="100%" stop-color="#4f46e5" />
+    <!-- Rich Royal Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#1e1b4b" />
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0284c7" flood-opacity="0.35"/>
+    <!-- Gold Trim Gradient -->
+    <linearGradient id="goldLustre" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCEBA6" />
+      <stop offset="30%" stop-color="#D4AF37" />
+      <stop offset="70%" stop-color="#AA771C" />
+      <stop offset="100%" stop-color="#85580F" />
+    </linearGradient>
+    <!-- Diamond Facet Gradient -->
+    <linearGradient id="diamondFacet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#bae6fd" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.95" />
+    </linearGradient>
+    <filter id="jewelGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="20" flood-color="#0284c7" flood-opacity="0.4"/>
     </filter>
   </defs>
-  <!-- Background with rounded corners -->
-  <rect width="512" height="512" rx="128" fill="url(#electroGrad)" filter="url(#glow)"/>
-  <!-- Subtle inner border -->
-  <rect x="16" y="16" width="480" height="480" rx="112" stroke="white" stroke-opacity="0.2" stroke-width="8"/>
-  <!-- Bolt / Tech Icon in center -->
-  <path d="M280 64L144 288H264L232 448L368 224H248L280 64Z" fill="white" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- App Icon Background -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" filter="url(#jewelGlow)"/>
+  
+  <!-- Subtle Gold Border -->
+  <rect x="18" y="18" width="476" height="476" rx="110" stroke="url(#goldLustre)" stroke-opacity="0.65" stroke-width="8"/>
+
+  <!-- Master Diamond / Gemstone Symbol -->
+  <g transform="translate(106, 96)">
+    <!-- Top Table Facet -->
+    <polygon points="150,16 226,72 74,72" fill="#e0f2fe" opacity="0.95" stroke="url(#goldLustre)" stroke-width="6" stroke-linejoin="round" />
+    
+    <!-- Top Side Facets -->
+    <polygon points="74,72 150,16 30,72" fill="#bae6fd" opacity="0.8" stroke="url(#goldLustre)" stroke-width="5" stroke-linejoin="round" />
+    <polygon points="226,72 150,16 270,72" fill="#7dd3fc" opacity="0.8" stroke="url(#goldLustre)" stroke-width="5" stroke-linejoin="round" />
+
+    <!-- Center Pavilion / Bottom Facets -->
+    <polygon points="30,72 74,72 150,296" fill="#38bdf8" opacity="0.85" stroke="url(#goldLustre)" stroke-width="5" stroke-linejoin="round" />
+    <polygon points="74,72 226,72 150,296" fill="url(#diamondFacet)" stroke="url(#goldLustre)" stroke-width="6" stroke-linejoin="round" />
+    <polygon points="226,72 270,72 150,296" fill="#0284c7" opacity="0.9" stroke="url(#goldLustre)" stroke-width="5" stroke-linejoin="round" />
+
+    <!-- Brilliant Sparkle Star -->
+    <g transform="translate(236, 36)">
+      <path d="M0 -30 L7 -7 L30 0 L7 7 L0 30 L-7 7 L-30 0 L-7 -7 Z" fill="#FFF2B2" />
+      <circle cx="0" cy="0" r="4" fill="#ffffff" />
+    </g>
+    <g transform="translate(56, 120)">
+      <path d="M0 -16 L4 -4 L16 0 L4 4 L0 16 L-4 4 L-16 0 L-4 -4 Z" fill="#FFF2B2" opacity="0.85" />
+    </g>
+  </g>
 </svg>

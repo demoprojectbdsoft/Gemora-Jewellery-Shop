@@ -23,8 +23,8 @@ export default function TopBar() {
             <span>Deals</span>
           </span>
           <p className="font-medium text-white/95 dark:text-gray-300 text-[11px] sm:text-xs tracking-tight sm:tracking-wide truncate sm:whitespace-normal">
-            <span className="hidden md:inline">Welcome to Worldwide Electronics Store • </span>
-            <span className="font-semibold">Free Express Shipping on $50+</span>
+            <span className="hidden md:inline">Welcome to Gemora Fine Jewellery • </span>
+            <span className="font-semibold">Free Insured Delivery on $150+</span>
           </p>
         </div>
 
