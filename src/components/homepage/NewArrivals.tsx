@@ -45,7 +45,7 @@ export default function NewArrivals({
               New Arrivals
             </h2>
             <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400">
-              <Sparkles className="w-3 h-3" /> Fresh in stock
+              <Sparkles className="w-3 h-3" /> New arrivals
             </span>
           </div>
           {/* Active Accent Underline using Gradient Blue */}

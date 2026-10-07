@@ -86,7 +86,6 @@ export interface CustomerWishlistItem {
   originalPrice?: number;
   discountPercentage?: number;
   image: string;
-  inStock: boolean;
   rating: number;
   category: string;
   addedAt: string;

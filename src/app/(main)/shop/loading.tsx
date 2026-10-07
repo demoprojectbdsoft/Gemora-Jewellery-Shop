@@ -73,7 +73,7 @@ export default function ShopLoading() {
               </div>
             </div>
 
-            {/* Featured & In Stock Section */}
+            {/* Featured Section */}
             <div className="space-y-3 pt-2 border-t border-sky-100/80 dark:border-gray-800">
               <div className="p-3 rounded-xl border border-sky-100/80 dark:border-gray-800 space-y-2">
                 <div className="h-3 w-16 bg-amber-200/60 dark:bg-amber-950/60 rounded-md" />
@@ -81,13 +81,6 @@ export default function ShopLoading() {
                   <div className="h-4 w-12 bg-gray-200 dark:bg-gray-800 rounded-full" />
                   <div className="h-4 w-20 bg-gray-200 dark:bg-gray-800 rounded-full" />
                 </div>
-              </div>
-              <div className="p-3 rounded-xl border border-sky-100/80 dark:border-gray-800 flex items-center justify-between">
-                <div className="space-y-1">
-                  <div className="h-3 w-20 bg-gray-200 dark:bg-gray-800 rounded-md" />
-                  <div className="h-2 w-16 bg-gray-200/60 dark:bg-gray-800/60 rounded-md" />
-                </div>
-                <div className="h-5 w-9 bg-gray-200 dark:bg-gray-800 rounded-full" />
               </div>
             </div>
           </div>

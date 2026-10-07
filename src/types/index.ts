@@ -132,8 +132,7 @@ export interface Product {
   discountPercentage?: number; // e.g. 80 for -80%
   image: string;
   additionalImages?: string[];
-  inStock: boolean;
-  stockQuantity?: number;
+
   rating?: number;
   reviewCount?: number;
   badges?: string[];

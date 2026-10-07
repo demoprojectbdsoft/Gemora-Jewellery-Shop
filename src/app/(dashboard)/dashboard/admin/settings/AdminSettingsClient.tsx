@@ -47,12 +47,10 @@ export interface AdminSettingsData {
     currency: string;
     timezone: string;
     orderPrefix: string;
-    lowStockThreshold: number;
     maintenanceMode: boolean;
   };
   notifications: {
     emailOnNewOrder: boolean;
-    emailOnLowStock: boolean;
     emailOnNewUser: boolean;
     smsOnCriticalError: boolean;
     dailyDigest: boolean;
@@ -92,9 +90,7 @@ export default function AdminSettingsClient({
   const [orderPrefix, setOrderPrefix] = useState(
     initialSettings?.store.orderPrefix || "ELC-"
   );
-  const [lowStockThreshold, setLowStockThreshold] = useState(
-    initialSettings?.store.lowStockThreshold || 5
-  );
+
   const [maintenanceMode, setMaintenanceMode] = useState(
     initialSettings?.store.maintenanceMode || false
   );
@@ -103,9 +99,7 @@ export default function AdminSettingsClient({
   const [emailOnNewOrder, setEmailOnNewOrder] = useState(
     initialSettings?.notifications.emailOnNewOrder ?? true
   );
-  const [emailOnLowStock, setEmailOnLowStock] = useState(
-    initialSettings?.notifications.emailOnLowStock ?? true
-  );
+
   const [emailOnNewUser, setEmailOnNewUser] = useState(
     initialSettings?.notifications.emailOnNewUser ?? false
   );
@@ -325,19 +319,6 @@ export default function AdminSettingsClient({
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="font-semibold text-gray-700 dark:text-gray-300">
-                  Low Stock Alert Threshold (Units)
-                </label>
-                <Input
-                  type="number"
-                  min={1}
-                  max={100}
-                  value={String(lowStockThreshold)}
-                  onChange={(e) => setLowStockThreshold(Number(e.target.value))}
-                  className="w-full h-10 rounded-xl border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-950 focus:border-sky-500 text-xs"
-                />
-              </div>
             </div>
 
             {/* Maintenance Mode Toggle */}
@@ -405,22 +386,6 @@ export default function AdminSettingsClient({
                 />
               </label>
 
-              <label className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 dark:border-gray-800 bg-slate-50/50 dark:bg-gray-950/40 cursor-pointer">
-                <div>
-                  <p className="font-bold text-gray-900 dark:text-white">
-                    Low Stock Warnings
-                  </p>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
-                    Get alerted when products fall below the threshold.
-                  </p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={emailOnLowStock}
-                  onChange={(e) => setEmailOnLowStock(e.target.checked)}
-                  className="w-4 h-4 accent-sky-600 rounded cursor-pointer"
-                />
-              </label>
 
               <label className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 dark:border-gray-800 bg-slate-50/50 dark:bg-gray-950/40 cursor-pointer">
                 <div>

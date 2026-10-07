@@ -100,7 +100,7 @@ export default function ProductsClient({
   }, [initialProducts]);
 
   const currentCategory = searchParams.get("category") || "all";
-  const currentStock = searchParams.get("inStock") || "all";
+
   const currentSearch = searchParams.get("search") || "";
   const currentSort = searchParams.get("sort") || "newest";
 
@@ -117,8 +117,7 @@ export default function ProductsClient({
         if (
           val === undefined ||
           val === "" ||
-          (key === "category" && val.toLowerCase() === "all") ||
-          (key === "inStock" && val.toLowerCase() === "all")
+          (key === "category" && val.toLowerCase() === "all")
         ) {
           params.delete(key);
         } else {
@@ -159,7 +158,6 @@ export default function ProductsClient({
     price: "",
     originalPrice: "",
     discountPercentage: "",
-    stockQuantity: "",
     sku: "",
     description: "",
     image: "",
@@ -167,7 +165,6 @@ export default function ProductsClient({
     categoryId: "",
     subCategoryIds: new Set<string>(),
     badges: new Set<string>(),
-    inStock: true,
     isFeatured: false,
     offerEndDate: "",
   });
@@ -239,7 +236,6 @@ export default function ProductsClient({
       price: p.price ? String(p.price) : "",
       originalPrice: p.originalPrice ? String(p.originalPrice) : "",
       discountPercentage: p.discountPercentage ? String(p.discountPercentage) : "",
-      stockQuantity: p.stockQuantity !== undefined ? String(p.stockQuantity) : "",
       sku: p.sku || "",
       description: p.description || "",
       image: p.image || "",
@@ -247,7 +243,6 @@ export default function ProductsClient({
       categoryId: catId,
       subCategoryIds: subSet,
       badges: badgeSet,
-      inStock: p.inStock,
       isFeatured: !!p.isFeatured,
       offerEndDate: p.offerEndDate ? new Date(p.offerEndDate).toISOString() : "",
     });
@@ -255,10 +250,6 @@ export default function ProductsClient({
     setIsEditOpen(true);
   };
 
-  const hasEditPositiveStock = useMemo(() => {
-    const qty = parseInt(editForm.stockQuantity, 10);
-    return !isNaN(qty) && qty > 0;
-  }, [editForm.stockQuantity]);
 
   // Auto calculate discount on price or original price change during update
   const handleEditPriceChange = (newPrice: string, newOriginalPrice: string) => {
@@ -298,7 +289,6 @@ export default function ProductsClient({
       price: parseFloat(editForm.price) || 0,
       originalPrice: editForm.originalPrice ? parseFloat(editForm.originalPrice) : undefined,
       discountPercentage: editForm.discountPercentage ? parseFloat(editForm.discountPercentage) : undefined,
-      stockQuantity: editForm.stockQuantity ? parseInt(editForm.stockQuantity) : 0,
       sku: editForm.sku || undefined,
       description: editForm.description || undefined,
       image: editForm.image,
@@ -306,7 +296,6 @@ export default function ProductsClient({
       categoryId: editForm.categoryId || undefined,
       subCategoryIds: Array.from(editForm.subCategoryIds),
       badges: Array.from(editForm.badges),
-      inStock: hasEditPositiveStock ? true : editForm.inStock,
       isFeatured: editForm.isFeatured,
       offerEndDate: editForm.offerEndDate ? new Date(editForm.offerEndDate).toISOString() : undefined,
       specifications: specObj,
@@ -411,7 +400,7 @@ export default function ProductsClient({
             </span>
           </h1>
           <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Manage inventory, view detailed specifications, update pricing and edit items.
+            Manage your jewellery catalog, update pricing, media and attributes.
           </p>
         </div>
 
@@ -474,28 +463,6 @@ export default function ProductsClient({
               </div>
             )}
 
-            {/* Stock Filter */}
-            <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-50 dark:bg-gray-800 border border-slate-200/60 dark:border-gray-700">
-              {(
-                [
-                  { id: "all", label: "All Stock" },
-                  { id: "true", label: "In Stock" },
-                  { id: "false", label: "Out of Stock" },
-                ] as const
-              ).map((st) => (
-                <button
-                  key={st.id}
-                  onClick={() => updateParams({ inStock: st.id === "all" ? undefined : st.id })}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer ${
-                    currentStock === st.id
-                      ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-xs"
-                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                  }`}
-                >
-                  {st.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           <div className="text-xs font-semibold text-gray-500 dark:text-gray-400">
@@ -555,7 +522,7 @@ export default function ProductsClient({
               </Select>
             </div>
 
-            {(currentSearch || currentCategory !== "all" || currentStock !== "all" || currentSort !== "newest") && (
+            {(currentSearch || currentCategory !== "all" || currentSort !== "newest") && (
               <Button
                 size="sm"
                 onPress={handleResetFilters}
@@ -607,7 +574,6 @@ export default function ProductsClient({
                   <th className="py-3.5 px-4">Product</th>
                   <th className="py-3.5 px-4">Category</th>
                   <th className="py-3.5 px-4">Price</th>
-                  <th className="py-3.5 px-4 text-center">Stock</th>
                   <th className="py-3.5 px-4 text-center">Status</th>
                   <th className="py-3.5 px-4">Badges</th>
                   <th className="py-3.5 px-4 text-right">Actions</th>
@@ -688,36 +654,7 @@ export default function ProductsClient({
                         </div>
                       </td>
 
-                      {/* Stock Quantity */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                        <span
-                          className={`font-mono text-xs font-bold ${
-                            (product.stockQuantity ?? 0) > 10
-                              ? "text-gray-700 dark:text-gray-300"
-                              : (product.stockQuantity ?? 0) > 0
-                                ? "text-amber-600 dark:text-amber-400"
-                                : "text-rose-500"
-                          }`}
-                        >
-                          {product.stockQuantity !== undefined ? product.stockQuantity : "N/A"}
-                        </span>
-                        <span className="block text-[10px] text-gray-400">units</span>
-                      </td>
 
-                      {/* Status */}
-                      <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                        {product.inStock ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/40">
-                            <CheckCircle2 className="w-3 h-3" />
-                            In Stock
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200/50 dark:border-rose-800/40">
-                            <XCircle className="w-3 h-3" />
-                            Out of Stock
-                          </span>
-                        )}
-                      </td>
 
                       {/* Badges */}
                       <td className="py-3.5 px-4">
@@ -846,7 +783,7 @@ export default function ProductsClient({
                     Quick Edit Product
                   </Modal.Heading>
                   <p className="text-xs text-gray-400 mt-0.5">
-                    Update inventory count, pricing, media and attributes.
+                    Update pricing, media and attributes.
                   </p>
                 </div>
                 <Modal.CloseTrigger className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer p-1 rounded-lg">
@@ -934,7 +871,7 @@ export default function ProductsClient({
                 {/* 2. Pricing & Inventory */}
                 <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-gray-800">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                    Pricing & Inventory
+                    Pricing
                   </h3>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -987,83 +924,9 @@ export default function ProductsClient({
                       />
                     </div>
 
-                    <div>
-                      <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
-                        Stock Quantity *
-                      </label>
-                      <Input
-                        type="number"
-                        min="0"
-                        value={editForm.stockQuantity}
-                        onChange={(e) =>
-                          setEditForm((prev) => ({
-                            ...prev,
-                            stockQuantity: e.target.value,
-                            inStock: parseInt(e.target.value) > 0,
-                          }))
-                        }
-                        required
-                        className="w-full h-10 rounded-xl bg-slate-50 dark:bg-gray-800 text-xs font-bold"
-                      />
-                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                    {/* In Stock toggle */}
-                    <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-gray-800/40 rounded-xl border border-slate-200/60 dark:border-gray-800 cursor-pointer">
-                      <div>
-                        <p className="text-xs font-bold text-gray-800 dark:text-gray-200">
-                          In Stock
-                        </p>
-                        <p className="text-[10px] text-gray-400">
-                          {hasEditPositiveStock
-                            ? "Automatically enabled (Stock > 0)"
-                            : "Mark if product is ready for purchase"}
-                        </p>
-                      </div>
-                      <Switch
-                        isSelected={hasEditPositiveStock ? true : editForm.inStock}
-                        isDisabled={hasEditPositiveStock}
-                        onChange={(val) => {
-                          if (!hasEditPositiveStock) {
-                            setEditForm((prev) => ({ ...prev, inStock: !!val }));
-                          }
-                        }}
-                        className={hasEditPositiveStock ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}
-                      >
-                        <Switch.Content className={hasEditPositiveStock ? "cursor-not-allowed" : "cursor-pointer"}>
-                          <Switch.Control className={hasEditPositiveStock ? "cursor-not-allowed" : "cursor-pointer"}>
-                            <Switch.Thumb className={hasEditPositiveStock ? "cursor-not-allowed" : "cursor-pointer"} />
-                          </Switch.Control>
-                        </Switch.Content>
-                      </Switch>
-                    </div>
 
-                    {/* Featured toggle */}
-                    <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-gray-800/40 rounded-xl border border-slate-200/60 dark:border-gray-800 cursor-pointer">
-                      <div>
-                        <p className="text-xs font-bold text-gray-800 dark:text-gray-200 flex items-center gap-1">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Featured Item
-                        </p>
-                        <p className="text-[10px] text-gray-400">
-                          Promote in featured grids & hero sections
-                        </p>
-                      </div>
-                      <Switch
-                        isSelected={editForm.isFeatured}
-                        onChange={(val) =>
-                          setEditForm((prev) => ({ ...prev, isFeatured: !!val }))
-                        }
-                        className="cursor-pointer"
-                      >
-                        <Switch.Content className="cursor-pointer">
-                          <Switch.Control className="cursor-pointer">
-                            <Switch.Thumb className="cursor-pointer" />
-                          </Switch.Control>
-                        </Switch.Content>
-                      </Switch>
-                    </div>
-                  </div>
 
                   {/* Deal Countdown End Date Picker */}
                   <HeroUIDateTimePicker

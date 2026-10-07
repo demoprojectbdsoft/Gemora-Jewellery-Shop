@@ -30,9 +30,9 @@ export default async function CustomerWishlistPage() {
             ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)
             : undefined,
         image: p.image,
-        inStock: p.inStock ?? false,
+
         rating: p.rating ?? 0,
-        category: p.category?.name || p.category || "Electronics",
+        category: p.category?.name || p.category || "Jewellery",
         addedAt: item.createdAt
           ? new Date(item.createdAt).toLocaleDateString("en-US", {
               month: "short",

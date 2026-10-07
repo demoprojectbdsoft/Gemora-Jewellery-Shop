@@ -73,10 +73,7 @@ function WishlistProductCard({
       toast.warning("Admin cannot add products to cart!");
       return;
     }
-    if (!item.inStock) {
-      toast.error("Sorry, this item is out of stock!");
-      return;
-    }
+
     if (isInCart) {
       toast.info(`"${item.title}" is already in your cart!`);
       return;
@@ -172,12 +169,9 @@ function WishlistProductCard({
 
           <button
             onClick={handleAddToCart}
-            disabled={!item.inStock || isAdding}
             title={isInCart ? "In cart" : "Add to cart"}
             className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
-              !item.inStock
-                ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                : isInCart
+              isInCart
                 ? "bg-sky-500 text-white cursor-default"
                 : "bg-slate-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-sky-500 hover:text-white cursor-pointer"
             }`}

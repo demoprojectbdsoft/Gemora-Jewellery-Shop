@@ -76,17 +76,10 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               {catName}
             </span>
 
-            {product.inStock ? (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/40">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/40">
                 <CheckCircle2 className="w-3 h-3" />
-                In Stock ({product.stockQuantity ?? 0} units)
+                Made to Order
               </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200/50 dark:border-rose-800/40">
-                <XCircle className="w-3 h-3" />
-                Out of Stock
-              </span>
-            )}
 
             {product.isFeatured && (
               <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40">
@@ -204,13 +197,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
             <Card className="bg-white dark:bg-gray-900 border border-slate-200/80 dark:border-gray-800 rounded-2xl p-4 shadow-2xs space-y-1">
               <span className="text-[10px] uppercase font-bold text-gray-400">
-                Inventory Status
+                Availability
               </span>
               <div className="flex items-center gap-1.5">
-                <span className="text-base font-black text-gray-900 dark:text-white">
-                  {product.stockQuantity ?? 0}
+                <span className="text-base font-black text-emerald-600 dark:text-emerald-400">
+                  Crafted to Order
                 </span>
-                <span className="text-xs text-gray-400">in stock</span>
               </div>
             </Card>
           </div>

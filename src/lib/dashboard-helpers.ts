@@ -83,8 +83,7 @@ export interface RawProduct {
   image?: string;
   rating?: number;
   reviewCount?: number;
-  stockQuantity?: number;
-  inStock?: boolean;
+
   categoryId?: any;
   categories?: string[];
   specifications?: any;

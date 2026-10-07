@@ -296,7 +296,7 @@ export interface CustomerOverviewExportData {
     price: number;
     originalPrice?: number;
     category?: string;
-    inStock?: boolean;
+
     addedAt?: string;
   }>;
   recentTransactions: Array<{
@@ -441,7 +441,7 @@ export function exportCustomerOverviewCsv(data: CustomerOverviewExportData): voi
         w.category || "Electronics",
         `$${w.price.toFixed(2)}`,
         w.originalPrice ? `$${w.originalPrice.toFixed(2)}` : "N/A",
-        w.inStock === false ? "Out of Stock" : "In Stock",
+        "Available to Order",
         w.addedAt || "Recent",
       ]);
     });

@@ -159,10 +159,9 @@ export default function ProductDetailsPage({
   }, [product?.id]);
 
   const handleQuantityChange = (type: "inc" | "dec") => {
-    const maxStock = product.stockQuantity ?? Infinity;
     if (type === "dec" && quantity > 1) {
       setQuantity((prev) => prev - 1);
-    } else if (type === "inc" && quantity < maxStock) {
+    } else if (type === "inc") {
       setQuantity((prev) => prev + 1);
     }
   };
@@ -171,7 +170,7 @@ export default function ProductDetailsPage({
     const currentUrl = typeof window !== "undefined" ? window.location.href : "";
     const shareData = {
       title: product.title,
-      text: `Check out ${product.title} on Electro!`,
+      text: `Check out ${product.title} on Gemora!`,
       url: currentUrl,
     };
 
@@ -561,19 +560,6 @@ export default function ProductDetailsPage({
                   </span>
                 </div>
 
-                <span className="text-gray-300 dark:text-gray-700">•</span>
-
-                <div className="flex items-center gap-1.5">
-                  {product.inStock ? (
-                    <span className="flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> In Stock {product.stockQuantity !== undefined ? `(${product.stockQuantity} units)` : ""}
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 px-2.5 py-1 rounded-full border border-red-200 dark:border-red-800/50">
-                      <XCircle className="w-3.5 h-3.5" /> Out of Stock
-                    </span>
-                  )}
-                </div>
               </div>
             </div>
 
@@ -616,7 +602,7 @@ export default function ProductDetailsPage({
                   <button
                     type="button"
                     onClick={() => handleQuantityChange("dec")}
-                    disabled={quantity <= 1 || !product.inStock}
+                    disabled={quantity <= 1}
                     className="h-full px-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors flex items-center justify-center"
                   >
                     <Minus className="w-4 h-4" />
@@ -627,7 +613,7 @@ export default function ProductDetailsPage({
                   <button
                     type="button"
                     onClick={() => handleQuantityChange("inc")}
-                    disabled={(product.stockQuantity !== undefined && quantity >= product.stockQuantity) || !product.inStock}
+                    disabled={false}
                     className="h-full px-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors flex items-center justify-center"
                   >
                     <Plus className="w-4 h-4" />
@@ -636,7 +622,7 @@ export default function ProductDetailsPage({
 
                 {/* Add To Cart Button */}
                 <Button
-                  isDisabled={!product.inStock}
+                  isDisabled={false}
                   onClick={handleAddToCart}
                   className={`flex-1 h-12 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 ${
                     isInCart
@@ -767,7 +753,7 @@ export default function ProductDetailsPage({
                     </span>
                   </div>
                   <div className="py-2.5 grid grid-cols-3">
-                    <span className="font-semibold text-slate-500">Stock SKU</span>
+                    <span className="font-semibold text-slate-500">SKU</span>
                     <span className="col-span-2 text-slate-800 dark:text-slate-200 font-mono">
                       {product.sku}
                     </span>

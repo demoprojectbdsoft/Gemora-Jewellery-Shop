@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Filter, Sparkles, CheckCircle2, RotateCcw, Tag, Check, Sliders, ChevronDown, Layers, DollarSign, Percent } from "lucide-react";
-import { RadioGroup, Radio, Switch } from "@heroui/react";
+import { Filter, Sparkles, RotateCcw, Tag, Check, Sliders, ChevronDown, Layers, DollarSign, Percent } from "lucide-react";
+import { RadioGroup, Radio } from "@heroui/react";
 import { ProductsSidebarFilterProps, Category, SubCategory } from "@/types";
 
 const DISCOUNT_TABS = ["0-20", "20-40", "40-60", "60-80", "80-100"] as const;
@@ -21,7 +21,7 @@ export default function ProductsSidebarFilter({ categories = [], subCategories =
   const activeCategory = searchParams.get("category") || "";
   const activeSubCat   = searchParams.get("subCategory") || "";
   const activeFeatured = searchParams.get("isFeatured") === "true";
-  const activeInStock  = searchParams.get("inStock") === "true";
+
   const urlMin         = Number(searchParams.get("minPrice")) || MIN_PRICE;
   const urlMax         = Number(searchParams.get("maxPrice")) || MAX_PRICE;
 
@@ -67,7 +67,7 @@ export default function ProductsSidebarFilter({ categories = [], subCategories =
   const activeDiscount = searchParams.get("discount") || "";
 
   const hasActiveFilters = Boolean(
-    activeCategory || activeSubCat || activeFeatured || activeInStock || activeDiscount || urlMin > MIN_PRICE || urlMax < MAX_PRICE
+    activeCategory || activeSubCat || activeFeatured || activeDiscount || urlMin > MIN_PRICE || urlMax < MAX_PRICE
   );
 
   const fillLeft = ((rangeMin - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100;
@@ -241,23 +241,6 @@ export default function ProductsSidebarFilter({ categories = [], subCategories =
               </Radio>
             </div>
           </RadioGroup>
-        </div>
-
-        <div className="flex items-center justify-between p-2.5 rounded-xl border border-sky-100/80 dark:border-gray-800 bg-sky-50/30 dark:bg-gray-800/40">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            <div>
-              <span className="text-xs font-semibold text-gray-800 dark:text-gray-200 block">In Stock Only</span>
-              <span className="text-[10px] text-gray-400">Available items</span>
-            </div>
-          </div>
-          <Switch isSelected={activeInStock} onChange={(checked) => updateParams({ inStock: checked ? "true" : null })} size="sm">
-            <Switch.Content>
-              <Switch.Control>
-                <Switch.Thumb />
-              </Switch.Control>
-            </Switch.Content>
-          </Switch>
         </div>
       </div>
     </div>

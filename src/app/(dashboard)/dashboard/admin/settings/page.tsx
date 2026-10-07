@@ -5,18 +5,16 @@ import AdminSettingsClient, {
 
 const INITIAL_ADMIN_SETTINGS: AdminSettingsData = {
   store: {
-    storeName: "Electro Store",
-    supportEmail: "support@electro.com",
+    storeName: "Gemora Jewellery",
+    supportEmail: "support@gemora.com",
     supportPhone: "+1 (555) 019-2834",
     currency: "USD",
     timezone: "America/New_York",
-    orderPrefix: "ELC-",
-    lowStockThreshold: 5,
+    orderPrefix: "GMR-",
     maintenanceMode: false,
   },
   notifications: {
     emailOnNewOrder: true,
-    emailOnLowStock: true,
     emailOnNewUser: false,
     smsOnCriticalError: true,
     dailyDigest: true,
